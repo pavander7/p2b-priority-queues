@@ -33,8 +33,11 @@ public:
     SortedPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function
-        (void)start;  // Delete this line when you implement this function
-        (void)end;  // Delete this line when you implement this function
+        for (InputIterator w = start; w != end; start++) {
+            data.push_back(w);
+        } data.push_back(end);
+        //(void)start;  // Delete this line when you implement this function
+        //(void)end;  // Delete this line when you implement this function
     } // SortedPQ
 
 
@@ -48,7 +51,9 @@ public:
     // Runtime: O(n)
     virtual void push(const TYPE &val) {
         // TODO: Implement this function
-        (void)val;  // Delete this line when you implement this function
+        data.push_back(val);
+        sort(data.front(), data.back(), this->compare());
+        //(void)val;  // Delete this line when you implement this function
     } // push()
 
 
@@ -60,6 +65,7 @@ public:
     // Runtime: Amortized O(1)
     virtual void pop() {
         // TODO: Implement this function
+        data.pop_back();
     } // pop()
 
 
@@ -72,8 +78,9 @@ public:
         // TODO: Implement this function
 
         // These lines are present only so that this provided file compiles.
-        static TYPE temp; // TODO: Delete this line
-        return temp;      // TODO: Delete or change this line
+        //static TYPE temp; // TODO: Delete this line
+        return data.back(); // TODO: Delete or change this line
+        //IF THIS IS FUCKED: figure out if back() returns a ref or a val
     } // top()
 
 
@@ -98,6 +105,7 @@ public:
     // Runtime: O(n log n)
     virtual void updatePriorities() {
         // TODO: Implement this function
+        sort(data.front(), data.back(), this->compare());
     } // updatePriorities()
 
 

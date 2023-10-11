@@ -21,7 +21,7 @@ public:
             // TODO: After you add add one extra pointer (see below), be sure
             // to initialize it here.
             explicit Node(const TYPE &val)
-                : elt{ val }, child{ nullptr }, sibling{ nullptr }
+                : elt{ val }, child{ nullptr }, sibling{ nullptr }, parent{ nullptr}
             {}
 
             // Description: Allows access to the element at that Node's
@@ -41,6 +41,7 @@ public:
             TYPE elt;
             Node *child;
             Node *sibling;
+            Node *parent;
             // TODO: Add one extra pointer (parent or previous) as desired.
     }; // Node
 
@@ -51,6 +52,8 @@ public:
     explicit PairingPQ(COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function.
+        root = nullptr;
+        count = 0;
     } // PairingPQ()
 
 
@@ -61,8 +64,12 @@ public:
     PairingPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function.
-        (void)start;  // Delete this line when you implement this function
-        (void)end;  // Delete this line when you implement this function
+        for (InputIterator w = start; w != end, w++) {
+            push(w);
+        } push(end);
+
+        //(void)start;  // Delete this line when you implement this function
+        //(void)end;  // Delete this line when you implement this function
     } // PairingPQ()
 
 
@@ -73,6 +80,8 @@ public:
         // TODO: Implement this function.
         // NOTE: The structure does not have to be identical to the original,
         //       but it must still be a valid pairing heap.
+        
+        Node* prev
     } // PairingPQ()
 
 
@@ -101,6 +110,15 @@ public:
     // Runtime: O(n)
     virtual void updatePriorities() {
         // TODO: Implement this function.
+        deque<Node*> temp;
+        while (!empty()) {
+            temp.push_back(top());
+            pop();
+        }
+        while (!temp.empty()) {
+            push(temp.front());
+            temp.pop_front();
+        }
     } // updatePriorities()
 
 
@@ -123,6 +141,30 @@ public:
     // Runtime: Amortized O(log(n))
     virtual void pop() {
         // TODO: Implement this function.
+        deque<Node*> temp;
+        Node* f = root->child;
+        while (f != nullptr) {
+            temp.push_back(f);
+            Node* g = f->sibling;
+            f->sibling = nullptr;
+            f = g;
+        } for (size_t y = (temp.size()+((temp.size()%size_t(2))/size_t(2)); y > 0; y--)) {
+            Node* a = temp.back();
+            temp.pop_back();
+            Node* b = temp.back();
+            temp.pop_back();
+            temp.push_front(meld(a,b));
+        } while (temp.size() > 1) {
+            Node* a = temp.front();
+            temp.pop_front();
+            Node* b = temp.front();
+            temp.pop_front();
+            temp.push_front(meld(a,b));
+        } 
+        delete *root;
+        root = temp.front();
+        temp.pop_front();
+        count--;
     } // pop()
 
 
@@ -136,8 +178,8 @@ public:
         // TODO: Implement this function
 
         // These lines are present only so that this provided file compiles.
-        static TYPE temp; // TODO: Delete this line
-        return temp;      // TODO: Delete or change this line
+        //static TYPE temp; // TODO: Delete this line
+        return root;      // TODO: Delete or change this line
     } // top()
 
 
@@ -145,14 +187,14 @@ public:
     // Runtime: O(1)
     virtual std::size_t size() const {
         // TODO: Implement this function
-        return 0; // TODO: Delete or change this line
+        return count; // TODO: Delete or change this line
     } // size()
 
     // Description: Return true if the pairing heap is empty.
     // Runtime: O(1)
     virtual bool empty() const {
         // TODO: Implement this function
-        return true; // TODO: Delete or change this line
+        return (root == nullptr); // TODO: Delete or change this line
     } // empty()
 
 
@@ -179,8 +221,17 @@ public:
     //       until it is eliminated by the user calling pop(). Remember this
     //       when you implement updateElt() and updatePriorities().
     Node* addNode(const TYPE &val) {
-        // TODO: Implement this function
-        (void)val;  // Delete this line when you implement this function
+        // TODO: Implement this function 
+        Node* baby = new Node(val);
+        if (this->compare(root->elt,baby) {
+            Node* temp = root->child;
+            root->child = baby;
+            baby->sibling = temp;
+        } else {
+            baby->child = root;
+            root = baby;
+        }
+        //(void)val;  // Delete this line when you implement this function
         return nullptr; // TODO: Delete or change this line
     } // addNode()
 
@@ -188,8 +239,19 @@ public:
 private:
     // TODO: Add any additional member variables or member functions you
     // require here.
+    Node* root;
+    size_t count;
     // TODO: We recommend creating a 'meld' function (see the Pairing Heap
     // papers).
+    Node* meld (Node* a, Node* b) {
+        if (this->compare(a,b)) {
+            a->child = b;
+            b->parent = a;
+        } else {
+            b->child = a;
+            a->parent = b;
+        }
+    }
 
     // NOTE: For member variables, you are only allowed to add a "root
     //       pointer" and a "count" of the number of nodes. Anything else
