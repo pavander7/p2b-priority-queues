@@ -97,7 +97,6 @@ void testPrimitiveOperations() {
     std::cout << "testPrimitiveOperations succeeded!" << std::endl;
 }
 
-
 // Test that the priority queue uses its comparator properly. HiddenData
 // can't be compared with operator<, so we use HiddenDataComp{} instead.
 template <template <typename...> typename PQ>
@@ -167,11 +166,40 @@ void testUpdatePriorities() {
     // wind qt the top adter updatePriorities.
     auto& datum = data[0];
     datum = 10;
+    assert(*eecsPQ.top() == 5);
     eecsPQ.updatePriorities();
     assert(*eecsPQ.top() == 10);
     assert(eecsPQ.top() == &datum);
 
     // TODO: Add more testing here as you see fit.
+
+    std::vector<int> data2 {
+        1,
+        2,
+        3,
+        4,
+        5,
+    };
+
+    PQ<const int*, IntPtrComp> pq2 {};
+    Eecs281PQ<const int*, IntPtrComp>& eecsPQ2 = pq2;
+
+    // NOTE: If you add more data to the vector, don't push the pointers
+    //   until AFTER the vector stops changing size! Think about why.
+    for (auto& datum : data2) {
+        //std::cout << "pushed: " << datum << std::endl;
+        eecsPQ2.push(&datum);
+    }
+
+    // Change some element in data (which is pointed to by an element in pq).
+    // This new value should be higher than any other so its address will
+    // wind qt the top adter updatePriorities.
+    auto& datum2 = data2[0];
+    datum2 = 10;
+    assert(*eecsPQ2.top() == 5);
+    eecsPQ2.updatePriorities();
+    assert(*eecsPQ2.top() == 10);
+    assert(eecsPQ2.top() == &datum2);
 }
 
 

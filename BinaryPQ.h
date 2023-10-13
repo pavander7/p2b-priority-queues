@@ -50,17 +50,17 @@ public:
     // Runtime: O(n)
     virtual void updatePriorities() {
         // TODO: Implement this function.
-        for (size_t w = 0; w < data.size(); w++) {
-            if (this->compare(data[child_less(w)],data[w])) {
-                TYPE temp = data[child_less(w)];
-                data[child_less(w)] = data[w];
-                data[w] = temp;
-            } else if (this->compare(data[child_more(w)],data[w])) {
-                TYPE temp = data[child_more(w)];
-                data[child_more(w)] = data[w];
-                data[w] = temp;
-            }
+        std::cout << "updating priorities on array of size " << data.size() << "...\n";
+        for (size_t w = data.size() - size_t(1); w > 0; w--) {
+            std::cout << w << std::endl;
+            if (this->compare(data[parent(w)],data[w])) {
+                std::cout << "swapping: " << parent(w) << " & " << w << std::endl;
+                TYPE temp = data[w];
+                data[w] = data[parent(w)];
+                data[parent(w)] = temp;
+            } else std::cout << "no swap made on " << w << " & " << child_l(w) << "\n";
         }
+        std::cout << "priorities updated.\n";
 
     } // updatePriorities()
 
@@ -69,6 +69,7 @@ public:
     // Runtime: O(log(n))
     virtual void push(const TYPE &val) {
         // TODO: Implement this function.
+        // this->test_indices();
         data.push_back(val);
         size_t w = data.size() - size_t(1);
         while (this->compare(data[parent(w)],data[w]) && w > 0) {
@@ -125,7 +126,6 @@ public:
         return data.size(); // TODO: Delete or change this line
     } // size()
 
-
     // Description: Return true if the PQ is empty.
     // Runtime: O(1)
     virtual bool empty() const {
@@ -161,7 +161,28 @@ private:
         } else return child_r(n);
     } 
     size_t parent(const size_t n) const {
-        return ((n - size_t(1))/size_t(2));
+        if (n == 0) return 0;
+        else return ((n - size_t(1))/size_t(2));
+    }
+    void test_indices() const {
+        //[0 1 2 3 4 5 6 7 8 9 10 11 12 13 14]
+        /*
+                      00
+              01              02
+          03      04      05      06
+        07  08  09  10  11  12  13  14
+        */
+        assert(child_l(0)==1);
+        assert(child_r(0)==2);
+        assert(parent(1)==0);
+        assert(parent(2)==0);
+        std::cout << "left bound working \n";
+
+        assert(child_l(6)==13);
+        assert(child_r(6)==14);
+        assert(parent(13)==6);
+        assert(parent(14)==6);
+        std::cout << "right bound working \n";
     }
 }; // BinaryPQ
 
