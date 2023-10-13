@@ -92,6 +92,7 @@ void testPrimitiveOperations() {
     assert(not eecsPQ.empty());
 
     eecsPQ.pop();
+    std::cout << "pop successful\n";
     assert(eecsPQ.size() == 0);
     assert(eecsPQ.empty());
 

@@ -163,29 +163,37 @@ public:
     // Runtime: Amortized O(log(n))
     virtual void pop() {
         // TODO: Implement this function.
-        std::deque<Node*> temp;
-        Node* f = root->child;
-        while (f != nullptr) {
-            temp.push_back(f);
-            Node* g = f->sibling;
-            f->sibling = nullptr;
-            f = g;
-        } for (size_t y = (temp.size()+((temp.size()%size_t(2))/size_t(2))); y > 0; y--) {
-            Node* a = temp.back();
-            temp.pop_back();
-            Node* b = temp.back();
-            temp.pop_back();
-            temp.push_front(meld(a,b));
-        } while (temp.size() > 1) {
-            Node* a = temp.front();
+        if (size() == 1) {
+            delete root;
+            root = nullptr;
+            std::cout << "node deleted\n";
+        } else {
+            std::deque<Node*> temp;
+            Node* f = root->child;
+            while (f != nullptr) {
+                temp.push_back(f);
+                Node* g = f->sibling;
+                f->sibling = nullptr;
+                f = g;
+            } for (size_t y = temp.size(); y > 1; y--) { //(temp.size()+((temp.size()%size_t(2))/size_t(2)))
+                std::cout << y << std::endl;
+                Node* a = temp.back();
+                temp.pop_back();
+                Node* b = temp.back();
+                temp.pop_back();
+                temp.push_front(meld(a,b));
+            } while (temp.size() > 1) {
+                Node* a = temp.front();
+                temp.pop_front();
+                Node* b = temp.front();
+                temp.pop_front();
+                temp.push_front(meld(a,b));
+            } 
+            delete root;
+            std::cout << "node deleted\n";
+            root = temp.front();
             temp.pop_front();
-            Node* b = temp.front();
-            temp.pop_front();
-            temp.push_front(meld(a,b));
-        } 
-        delete root;
-        root = temp.front();
-        temp.pop_front();
+        }
         count--;
     } // pop()
 
