@@ -64,9 +64,9 @@ public:
     PairingPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function.
-        for (InputIterator w = start; w != end, w++) {
-            push(w);
-        } push(end);
+        for (InputIterator w = start; w != end; w++) {
+            push(*w);
+        } push(*end);
 
         //(void)start;  // Delete this line when you implement this function
         //(void)end;  // Delete this line when you implement this function
@@ -80,8 +80,18 @@ public:
         // TODO: Implement this function.
         // NOTE: The structure does not have to be identical to the original,
         //       but it must still be a valid pairing heap.
-        
-        Node* prev
+        std::deque<Node*> intake;
+        intake.push_back(other.root);
+        while (!intake.empty()) {
+            if (intake.front()->sibling != nullptr) {
+                intake.push_back(intake.front()->sibling);
+            }
+            if (intake.front()->child != nullptr) {
+                intake.push_back(intake.front()->child);
+            }
+            this->push(intake.front()->elt);
+            intake.pop_front();
+        }
     } // PairingPQ()
 
 
@@ -100,6 +110,9 @@ public:
     // Runtime: O(n)
     ~PairingPQ() {
         // TODO: Implement this function.
+        while (!empty()) {
+            pop();
+        }
     } // ~PairingPQ()
 
 
@@ -110,13 +123,21 @@ public:
     // Runtime: O(n)
     virtual void updatePriorities() {
         // TODO: Implement this function.
-        deque<Node*> temp;
+        std::deque<Node*> temp;
         while (!empty()) {
-            temp.push_back(top());
+            temp.push_back(root);
             pop();
         }
         while (!temp.empty()) {
-            push(temp.front());
+            Node* baby = temp.front();
+            if (this->compare(root->elt,baby->elt)) {
+                Node* temp = root->child;
+                root->child = baby;
+                baby->sibling = temp;
+            } else {
+                baby->child = root;
+                root = baby;
+            }
             temp.pop_front();
         }
     } // updatePriorities()
@@ -141,14 +162,14 @@ public:
     // Runtime: Amortized O(log(n))
     virtual void pop() {
         // TODO: Implement this function.
-        deque<Node*> temp;
+        std::deque<Node*> temp;
         Node* f = root->child;
         while (f != nullptr) {
             temp.push_back(f);
             Node* g = f->sibling;
             f->sibling = nullptr;
             f = g;
-        } for (size_t y = (temp.size()+((temp.size()%size_t(2))/size_t(2)); y > 0; y--)) {
+        } for (size_t y = (temp.size()+((temp.size()%size_t(2))/size_t(2))); y > 0; y--) {
             Node* a = temp.back();
             temp.pop_back();
             Node* b = temp.back();
@@ -161,7 +182,7 @@ public:
             temp.pop_front();
             temp.push_front(meld(a,b));
         } 
-        delete *root;
+        delete root;
         root = temp.front();
         temp.pop_front();
         count--;
@@ -179,7 +200,7 @@ public:
 
         // These lines are present only so that this provided file compiles.
         //static TYPE temp; // TODO: Delete this line
-        return root;      // TODO: Delete or change this line
+        return root->elt;      // TODO: Delete or change this line
     } // top()
 
 
@@ -208,8 +229,24 @@ public:
     // Runtime: As discussed in reading material.
     void updateElt(Node* node, const TYPE &new_value) {
         // TODO: Implement this function
-        (void)node;  // Delete this line when you implement this function
-        (void)new_value;  // Delete this line when you implement this func
+        Node* current = node;
+        node->elt = new_value;
+        while (this->compare(current,current->parent)) {
+            Node* temp = current->parent;
+            current->parent = temp->parent;
+            temp->parent = current;
+            temp->child = current->child;
+            current->child = temp;
+            Node* temp2 = current->sibling;
+            current->sibling = temp->sibling;
+            temp->sibling = temp2;
+            if (temp == root) {
+                root = current;
+                break;
+            }
+        }
+        //(void)node;  // Delete this line when you implement this function
+        //(void)new_value;  // Delete this line when you implement this func
     } // updateElt()
 
 
@@ -223,7 +260,7 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function 
         Node* baby = new Node(val);
-        if (this->compare(root->elt,baby) {
+        if (this->compare(root->elt,baby->elt)) {
             Node* temp = root->child;
             root->child = baby;
             baby->sibling = temp;
@@ -232,7 +269,7 @@ public:
             root = baby;
         }
         //(void)val;  // Delete this line when you implement this function
-        return nullptr; // TODO: Delete or change this line
+        return baby; // TODO: Delete or change this line
     } // addNode()
 
 
@@ -244,12 +281,14 @@ private:
     // TODO: We recommend creating a 'meld' function (see the Pairing Heap
     // papers).
     Node* meld (Node* a, Node* b) {
-        if (this->compare(a,b)) {
+        if (this->compare(a->elt,b->elt)) {
             a->child = b;
             b->parent = a;
+            return a;
         } else {
             b->child = a;
             a->parent = b;
+            return b;
         }
     }
 

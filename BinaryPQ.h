@@ -19,7 +19,7 @@ public:
     explicit BinaryPQ(COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function, or verify that it is already done
-        data.push_back(TYPE()); //FIX THIS SHIT
+        // data.push_back(TYPE()); //FIX THIS SHIT
     } // BinaryPQ
 
 
@@ -30,7 +30,7 @@ public:
     BinaryPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function
-        BinaryPQ(comp);
+        // BinaryPQ(comp);
         for (InputIterator w = start; w != end; w++) {
             push(w);
         } push(end);
@@ -113,7 +113,7 @@ public:
 
         // These lines are present only so that this provided file compiles.
         //static TYPE temp; // TODO: Delete this line
-        return front();      // TODO: Delete or change this line
+        return data.front();      // TODO: Delete or change this line
     } // top()
 
 
