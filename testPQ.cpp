@@ -78,12 +78,15 @@ void testPrimitiveOperations() {
     PQ<int> pq {};
     Eecs281PQ<int>& eecsPQ = pq;
 
+    assert(eecsPQ.size() == 0);
     eecsPQ.push(3);
+    assert(eecsPQ.size() == 1);
     eecsPQ.push(4);
     assert(eecsPQ.size() == 2);
     assert(eecsPQ.top() == 4);
 
     eecsPQ.pop();
+    std::cout << "pop successful\n";
     assert(eecsPQ.size() == 1);
     assert(eecsPQ.top() == 3);
     assert(not eecsPQ.empty());

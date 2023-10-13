@@ -150,6 +150,7 @@ public:
     // Runtime: O(1)
     virtual void push(const TYPE &val) {
         addNode(val);
+        count++;
     } // push()
 
 
@@ -260,11 +261,16 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function 
         Node* baby = new Node(val);
-        if (this->compare(root->elt,baby->elt)) {
+        if (root == nullptr) {
+            std::cout << "first node pushed\n";
+            root = baby;
+        } else if (!this->compare(root->elt,baby->elt)) {
+            std::cout << "pushing via swap\n";
             Node* temp = root->child;
             root->child = baby;
             baby->sibling = temp;
         } else {
+            std::cout << "pushing via rebase\n";
             baby->child = root;
             root = baby;
         }
