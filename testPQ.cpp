@@ -206,6 +206,18 @@ void testUpdatePriorities() {
     std::cout << "priorities updated\n";
     assert(*eecsPQ2.top() == 10);
     assert(eecsPQ2.top() == &datum2);
+
+    const std::vector<int> vec {
+        1,
+        0,
+    };
+
+    std::cout << "Calling constructors" << std::endl;
+
+    // Range-based constructor
+    PQ<int> pairing1 { vec.cbegin(), vec.cend() };
+    std::cout << "range-based constructor successful\n";
+
     std::cout << "calling deconstructors...\n";
 }
 
@@ -243,8 +255,11 @@ void testPairing() {
         Eecs281PQ<int>& pq2 = pairing2;
         Eecs281PQ<int>& pq3 = pairing3;
 
+        std::cout << "pq1 is size " << pq1.size() << std::endl;
         pq1.push(3);
+        std::cout << "pq1 is size " << pq1.size() << std::endl;
         pq2.pop();
+        std::cout << "pq1 is size " << pq1.size() << std::endl;
         assert(pq1.size() == 3);
         assert(not pq1.empty());
         assert(pq1.top() == 3);

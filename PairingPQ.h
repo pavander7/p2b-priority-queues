@@ -64,9 +64,11 @@ public:
     PairingPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function.
+        root = nullptr;
+        count = 0;
         for (InputIterator w = start; w != end; w++) {
             push(*w);
-        } push(*end);
+        } 
 
         //(void)start;  // Delete this line when you implement this function
         //(void)end;  // Delete this line when you implement this function
@@ -80,11 +82,11 @@ public:
         // TODO: Implement this function.
         // NOTE: The structure does not have to be identical to the original,
         //       but it must still be a valid pairing heap.
-        std::cout << "bi\n";
+        root = nullptr;
+        count = 0;
         std::deque<Node*> intake;
         intake.push_back(other.root);
         while (!intake.empty()) {
-            std::cout << "what\n";
             if (intake.front()->sibling != nullptr) {
                 intake.push_back(intake.front()->sibling);
             }
@@ -93,7 +95,7 @@ public:
             }
             this->push(intake.front()->elt);
             intake.pop_front();
-        } std::cout << "ba\n";
+        }
     } // PairingPQ()
 
 
@@ -104,6 +106,8 @@ public:
         // HINT: Use the copy-swap method from the "Arrays and Containers"
         // lecture.
         // (void)rhs;  // Delete this line when you implement this function
+        root = nullptr;
+        count = 0;
         PairingPQ temp(rhs);
         std::swap(root,temp.root);
         std::swap(count,temp.count);
@@ -117,7 +121,7 @@ public:
         // TODO: Implement this function.
         while (!empty()) {
             pop();
-            std::cout << size() << std::endl;
+            //std::cout << size() << std::endl;
         } //delete root;
         //count--;
     } // ~PairingPQ()
@@ -169,8 +173,7 @@ public:
     //              addNode().
     // Runtime: O(1)
     virtual void push(const TYPE &val) {
-        addNode(val);
-        count++;
+        addNode(val);    
     } // push()
 
 
@@ -184,16 +187,17 @@ public:
     virtual void pop() {
         // TODO: Implement this function.
         if (size() == 1) {
-            std::cout << "deleting root\n";
+            //std::cout << "deleting root\n";
             //delete root;
             root = nullptr;
-            std::cout << "node deleted (special)\n";
+            //std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
-            std::cout << "deleting last child\n";
+            //std::cout << "deleting last child\n";
             Node* temp = root->child;
             delete root;
             root = temp;
         } else {
+            //std::cout << "deleting (normal)\n";
             std::deque<Node*> temp;
             Node* f = root->child;
             while (f != nullptr) {
@@ -215,7 +219,7 @@ public:
                 temp.push_front(meld(a,b));
             } 
             delete root;
-            std::cout << "node deleted\n";
+            //std::cout << "node deleted\n";
             root = temp.front();
             temp.pop_front();
         }
@@ -295,18 +299,18 @@ public:
         // TODO: Implement this function 
         Node* baby = new Node(val);
         if (root == nullptr) {
-            std::cout << "first node pushed\n";
+            //std::cout << "first node pushed\n";
             root = baby;
         } else if (!this->compare(root->elt,baby->elt)) {
-            std::cout << "pushing via swap\n";
+            //std::cout << "pushing via swap\n";
             Node* temp = root->child;
             root->child = baby;
             baby->sibling = temp;
         } else {
-            std::cout << "pushing via rebase\n";
+            //std::cout << "pushing via rebase\n";
             baby->child = root;
             root = baby;
-        }
+        } count++;
         //(void)val;  // Delete this line when you implement this function
         return baby; // TODO: Delete or change this line
     } // addNode()

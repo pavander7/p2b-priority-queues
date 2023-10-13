@@ -32,8 +32,8 @@ public:
         // TODO: Implement this function
         // BinaryPQ(comp);
         for (InputIterator w = start; w != end; w++) {
-            push(w);
-        } push(end);
+            push(*w);
+        } 
         //(void)start;  // Delete this line when you implement this function
         //(void)end;  // Delete this line when you implement this function
     } // BinaryPQ
@@ -150,11 +150,6 @@ private:
     size_t child_r(const size_t n) const {
         return (child_l(n) + size_t(1));
     }
-    size_t child_more(const size_t n) const {
-        if (this->compare(data[child_l(n)], data[child_r(n)])) {
-            return child_l(n);
-        } else return child_r(n);
-    }
     size_t child_less(const size_t n) const {
         if (!(this->compare(data[child_l(n)], data[child_r(n)]))) {
             return child_l(n);
@@ -163,26 +158,6 @@ private:
     size_t parent(const size_t n) const {
         if (n == 0) return 0;
         else return ((n - size_t(1))/size_t(2));
-    }
-    void test_indices() const {
-        //[0 1 2 3 4 5 6 7 8 9 10 11 12 13 14]
-        /*
-                      00
-              01              02
-          03      04      05      06
-        07  08  09  10  11  12  13  14
-        */
-        assert(child_l(0)==1);
-        assert(child_r(0)==2);
-        assert(parent(1)==0);
-        assert(parent(2)==0);
-        std::cout << "left bound working \n";
-
-        assert(child_l(6)==13);
-        assert(child_r(6)==14);
-        assert(parent(13)==6);
-        assert(parent(14)==6);
-        std::cout << "right bound working \n";
     }
 }; // BinaryPQ
 

@@ -33,9 +33,9 @@ public:
     SortedPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function
-        for (InputIterator w = start; w != end; start++) {
-            data.push_back(w);
-        } data.push_back(end);
+        for (InputIterator w = start; w != end; w++) {
+            data.push_back(*w);
+        } 
         //(void)start;  // Delete this line when you implement this function
         //(void)end;  // Delete this line when you implement this function
     } // SortedPQ
