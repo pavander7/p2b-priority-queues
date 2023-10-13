@@ -109,13 +109,33 @@ void testHiddenData() {
     struct HiddenDataComp {
         bool operator()(const HiddenData &a, const HiddenData &b) const {
             // TODO: Finish this comparator
-            (void)a;  // Delete this line when you finish this function
-            (void)b;  // Delete this line when you finish this function
-            return false;
+            // (void)a;  // Delete this line when you finish this function
+            // (void)b;  // Delete this line when you finish this function
+            return (a.data < b.data);
         }
     };
 
     std::cout << "Testing with hidden data..." << std::endl;
+
+    PQ<HiddenData, HiddenDataComp> pq {};
+    Eecs281PQ<HiddenData, HiddenDataComp>& eecsPQ = pq;
+
+    HiddenData three = {3};
+    HiddenData four = {4};
+
+    eecsPQ.push(three);
+    eecsPQ.push(four);
+    assert(eecsPQ.size() == 2);
+    assert(eecsPQ.top().data == 4);
+
+    eecsPQ.pop();
+    assert(eecsPQ.size() == 1);
+    assert(eecsPQ.top().data == 3);
+    assert(not eecsPQ.empty());
+
+    eecsPQ.pop();
+    assert(eecsPQ.size() == 0);
+    assert(eecsPQ.empty());
 
     // TODO: Add code here to actually test with the HiddenData type.
     // Consider writing this code in the style of testPrimitiveOperations
@@ -252,6 +272,15 @@ int main() {
     switch (pqType) {
     case PQType::Unordered:
         testPriorityQueue<UnorderedPQ>();
+        break;
+    case PQType::Sorted:
+        testPriorityQueue<SortedPQ>();
+        break;
+    case PQType::Binary:
+        testPriorityQueue<BinaryPQ>();
+        break;
+    case PQType::Pairing:
+        testPriorityQueue<PairingPQ>();
         break;
     default:
         std::cout << "Unrecognized PQ type " << pqType << " in main.\n"

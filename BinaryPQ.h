@@ -51,13 +51,13 @@ public:
     virtual void updatePriorities() {
         // TODO: Implement this function.
         for (size_t w = 0; w < data.size(); w++) {
-            if (this->compare(data[child_more(w),data[w]])) {
-                TYPE temp = data[child_more(w)];
-                data[child_more(w)] = data[w];
-                data[w] = temp;
-            } else if (this->compare(data[child_less(w),data[w]])) {
+            if (this->compare(data[child_less(w)],data[w])) {
                 TYPE temp = data[child_less(w)];
                 data[child_less(w)] = data[w];
+                data[w] = temp;
+            } else if (this->compare(data[child_more(w)],data[w])) {
+                TYPE temp = data[child_more(w)];
+                data[child_more(w)] = data[w];
                 data[w] = temp;
             }
         }
@@ -70,12 +70,12 @@ public:
     virtual void push(const TYPE &val) {
         // TODO: Implement this function.
         data.push_back(val);
-        for (size_t w = (data.size() - size_t(1)); w > 0; w = parent(w)) {
-            if(this->compare(data[w],data[parent(w)])) {
-                TYPE temp = data[parent(w)];
-                data[parent(w)] = data[w];
-                data[w] = temp;
-            } else break;
+        size_t w = data.size() - size_t(1);
+        while (this->compare(data[parent(w)],data[w]) && w > 0) {
+            TYPE temp = data[parent(w)];
+            data[parent(w)] = data[w];
+            data[w] = temp;
+            w = parent(w);
         }
         //(void)val;  // Delete this line when you implement this function
     } // push()
@@ -90,13 +90,13 @@ public:
     virtual void pop() {
         TYPE temp = data.back();
         data.back() = data.front();
-        data.front() = temp();
+        data.front() = temp;
         data.pop_back();
-        for (size_t w = 0; w < data.size(); w = child_more(w)) {
-            if(this->compare(data[child_more(w)],data[w])) {
+        for (size_t w = 0; w < data.size(); w = child_less(w)) {
+            if(this->compare(data[child_less(w)],data[w])) {
                 TYPE temp = data[w];
-                data[w] = data[child_more(w)];
-                data[child_more(w)] = temp;
+                data[w] = data[child_less(w)];
+                data[child_less(w)] = temp;
             } else break;
         }
         // TODO: Implement this function.
@@ -151,17 +151,17 @@ private:
         return (child_l(n) + size_t(1));
     }
     size_t child_more(const size_t n) const {
-        if (this->compare(data[child_l(n), child_r(n)])) {
+        if (this->compare(data[child_l(n)], data[child_r(n)])) {
             return child_l(n);
         } else return child_r(n);
     }
     size_t child_less(const size_t n) const {
-        if (!(this->compare(data[child_l(n), child_r(n)]))) {
+        if (!(this->compare(data[child_l(n)], data[child_r(n)]))) {
             return child_l(n);
         } else return child_r(n);
     } 
     size_t parent(const size_t n) const {
-        return (((n+(n%size_t(2)))/size_t(2))/size_t(1));
+        return ((n - size_t(1))/size_t(2));
     }
 }; // BinaryPQ
 

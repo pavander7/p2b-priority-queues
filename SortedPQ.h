@@ -52,7 +52,7 @@ public:
     virtual void push(const TYPE &val) {
         // TODO: Implement this function
         data.push_back(val);
-        sort(data.front(), data.back(), this->compare());
+        sort(data.begin(), data.end(), this->compare);
         //(void)val;  // Delete this line when you implement this function
     } // push()
 
@@ -105,7 +105,7 @@ public:
     // Runtime: O(n log n)
     virtual void updatePriorities() {
         // TODO: Implement this function
-        sort(data.front(), data.back(), this->compare());
+        sort(data.begin(), data.end(), this->compare);
     } // updatePriorities()
 
 
