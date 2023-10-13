@@ -201,7 +201,9 @@ void testUpdatePriorities() {
     auto& datum2 = data2[0];
     datum2 = 10;
     assert(*eecsPQ2.top() == 5);
+    std::cout << "on to update prioties\n";
     eecsPQ2.updatePriorities();
+    std::cout << "priorities updated\n";
     assert(*eecsPQ2.top() == 10);
     assert(eecsPQ2.top() == &datum2);
 }
