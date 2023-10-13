@@ -80,9 +80,11 @@ public:
         // TODO: Implement this function.
         // NOTE: The structure does not have to be identical to the original,
         //       but it must still be a valid pairing heap.
+        std::cout << "bi\n";
         std::deque<Node*> intake;
         intake.push_back(other.root);
         while (!intake.empty()) {
+            std::cout << "what\n";
             if (intake.front()->sibling != nullptr) {
                 intake.push_back(intake.front()->sibling);
             }
@@ -91,7 +93,7 @@ public:
             }
             this->push(intake.front()->elt);
             intake.pop_front();
-        }
+        } std::cout << "ba\n";
     } // PairingPQ()
 
 
@@ -101,7 +103,10 @@ public:
         // TODO: Implement this function.
         // HINT: Use the copy-swap method from the "Arrays and Containers"
         // lecture.
-        (void)rhs;  // Delete this line when you implement this function
+        // (void)rhs;  // Delete this line when you implement this function
+        PairingPQ temp(rhs);
+        std::swap(root,temp.root);
+        std::swap(count,temp.count);
         return *this;
     } // operator=()
 
@@ -113,7 +118,8 @@ public:
         while (!empty()) {
             pop();
             std::cout << size() << std::endl;
-        }
+        } //delete root;
+        //count--;
     } // ~PairingPQ()
 
 
@@ -179,7 +185,7 @@ public:
         // TODO: Implement this function.
         if (size() == 1) {
             std::cout << "deleting root\n";
-            delete root;
+            //delete root;
             root = nullptr;
             std::cout << "node deleted (special)\n";
         } else if (size() == 2) {

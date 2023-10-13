@@ -206,6 +206,7 @@ void testUpdatePriorities() {
     std::cout << "priorities updated\n";
     assert(*eecsPQ2.top() == 10);
     assert(eecsPQ2.top() == &datum2);
+    std::cout << "calling deconstructors...\n";
 }
 
 
@@ -225,13 +226,16 @@ void testPairing() {
 
         // Range-based constructor
         PairingPQ<int> pairing1 { vec.cbegin(), vec.cend() };
+        std::cout << "range-based constructor successful\n";
 
         // Copy constructor
         PairingPQ<int> pairing2 { pairing1 };
+        std::cout << "copy constructor successful\n";
 
         // Copy-assignment operator
         PairingPQ<int> pairing3 {};
         pairing3 = pairing2;
+        std::cout << "copy-assignment operator successful\n";
 
         // A reference to a PairingPQ<T> is a reference to an Eecs281PQ<T>.
         // Yay for polymorphism! We can therefore write:
