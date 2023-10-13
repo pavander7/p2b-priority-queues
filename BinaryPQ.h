@@ -151,7 +151,7 @@ private:
         return (child_l(n) + size_t(1));
     }
     size_t child_less(const size_t n) const {
-        if (data[child_l(n)] == size()) {
+        if (child_l(n) == size()) {
             return child_l(n);
         } else if (!(this->compare(data[child_l(n)], data[child_r(n)]))) {
             return child_l(n);
