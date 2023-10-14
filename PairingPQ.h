@@ -119,7 +119,7 @@ public:
     // Runtime: O(n)
     ~PairingPQ() {
         // TODO: Implement this function.
-        while (size() > 1) {
+        while (size() > 0) {
             pop();
             //std::cout << size() << std::endl;
         } //if (root != nullptr) delete root;
@@ -190,14 +190,14 @@ public:
             std::cout << "deleting root\n";
             delete root;
             root = nullptr;
-            //std::cout << "node deleted (special)\n";
+            std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
-            //std::cout << "deleting last child\n";
+            std::cout << "deleting last child " << root->child << "\n";
             Node* temp = root->child;
             delete root;
             root = temp;
         } else {
-            //std::cout << "deleting (normal)\n";
+            std::cout << "deleting (normal)\n";
             std::deque<Node*> temp;
             Node* f = root->child;
             while (f != nullptr) {
@@ -206,12 +206,16 @@ public:
                 f->sibling = nullptr;
                 f->parent = nullptr;
                 f = g;
-            } for (size_t y = temp.size(); y > 1; y--) { 
+            } std::deque<Node*> temp2;
+            while (temp.size() >= 2) { 
                 Node* a = temp.back();
                 temp.pop_back();
                 Node* b = temp.back();
                 temp.pop_back();
-                temp.push_front(meld(a,b));
+                temp2.push_front(meld(a,b));
+            } if (!temp.empty()) {
+                temp2.push_front(temp.front());
+                temp.pop_front();
             } while (temp.size() > 1) {
                 Node* a = temp.front();
                 temp.pop_front();
