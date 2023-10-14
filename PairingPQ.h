@@ -206,6 +206,10 @@ public:
                 temp.pop_front();
                 temp.push_front(meld(a,b));
             } count++;
+            std::cout << "passes complete\n";
+            std::cout << temp.front() << "\n";
+            root = temp.front();
+            temp.pop_front();
         } else if (size() == 1) {
             std::cout << root << " deleting root\n";
             delete root;
