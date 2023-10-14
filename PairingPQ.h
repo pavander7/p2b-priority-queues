@@ -124,6 +124,7 @@ public:
             //std::cout << size() << std::endl;
         } //if (root != nullptr) delete root;
         //count--;
+        std::cout << "deconstruct complete\n";
     } // ~PairingPQ()
 
 
@@ -187,19 +188,22 @@ public:
     virtual void pop() {
         // TODO: Implement this function.
         if (size() == 1) {
-            std::cout << "deleting root\n";
+            std::cout << root << " deleting root\n";
             delete root;
             root = nullptr;
             std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
-            std::cout << "deleting last child " << root->child << "\n";
-            Node* temp = root->child;
-            delete root;
-            root = temp;
+            std::cout << "deleting last child " << root << " " << root->child << root->child->child << "\n";
+            if (!(root->child == root)) {
+                Node* temp = root;
+                root = root->child;
+                delete temp;
+            } else root->child = nullptr;
         } else {
-            std::cout << "deleting (normal)\n";
+            std::cout << root << " " << root->child << " deleting (normal)\n";
             std::deque<Node*> temp;
             Node* f = root->child;
+            delete root;
             while (f != nullptr) {
                 temp.push_back(f);
                 Node* g = f->sibling;
@@ -207,26 +211,31 @@ public:
                 f->parent = nullptr;
                 f = g;
             } std::deque<Node*> temp2;
-            while (temp.size() >= 2) { 
+            while (temp.size() > 1) { 
+                std::cout << temp.size() << std::endl;
                 Node* a = temp.back();
                 temp.pop_back();
                 Node* b = temp.back();
                 temp.pop_back();
                 temp2.push_front(meld(a,b));
-            } if (!temp.empty()) {
-                temp2.push_front(temp.front());
-                temp.pop_front();
-            } while (temp.size() > 1) {
-                Node* a = temp.front();
-                temp.pop_front();
-                Node* b = temp.front();
-                temp.pop_front();
-                temp.push_front(meld(a,b));
+            } if (temp.size() == 1) {
+                std::cout << "what\n";
+                temp2.push_front(temp.back());
+                temp.pop_back();
+            } else {
+                std::cout << temp.size() << temp2.size() << " nope\n";
+            } while (temp2.size() > 1) {
+                std::cout << "pass 2\n";
+                Node* a = temp2.front();
+                temp2.pop_front();
+                Node* b = temp2.front();
+                temp2.pop_front();
+                temp2.push_front(meld(a,b));
             } 
-            delete root;
-            //std::cout << "node deleted\n";
-            root = temp.front();
-            temp.pop_front();
+            std::cout << "passes complete\n";
+            std::cout << temp2.front() << "\n";
+            root = temp2.front();
+            temp2.pop_front();
         }
         count--;
     } // pop()
