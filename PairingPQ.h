@@ -119,7 +119,7 @@ public:
     // Runtime: O(n)
     ~PairingPQ() {
         // TODO: Implement this function.
-        while (!empty()) {
+        while (size() > 1) {
             pop();
             //std::cout << size() << std::endl;
         } //delete root;
@@ -187,9 +187,9 @@ public:
     virtual void pop() {
         // TODO: Implement this function.
         if (size() == 1) {
-            //std::cout << "deleting root\n";
-            //delete root;
-            root = nullptr;
+            std::cout << "deleting root\n";
+            delete root;
+            //root = nullptr;
             //std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
             //std::cout << "deleting last child\n";
@@ -302,6 +302,7 @@ public:
         if (root == nullptr) {
             //std::cout << "first node pushed\n";
             root = baby;
+            // std::cout << baby << std::endl;
         } else if (!this->compare(root->elt,baby->elt)) {
             //std::cout << "pushing via swap\n";
             Node* temp = root->child;
