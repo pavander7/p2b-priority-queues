@@ -216,7 +216,7 @@ public:
             root = nullptr;
             std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
-            std::cout << "deleting last child " << root << " " << root->child << " " << root->child->child << "\n";
+            std::cout << "deleting last child " << root << " " << root->child /*<< " " << root->child->child*/ << "\n";
             if (!(root->child == root)) {
                 Node* temp = root;
                 root = root->child;
@@ -343,7 +343,7 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function 
         Node* baby = new Node(val);
-        std::cout << baby << std::endl;
+        std::cout << "adding " << baby << std::endl;
         if (root == nullptr) {
             //std::cout << "first node pushed\n";
             root = baby;
@@ -371,23 +371,29 @@ private:
     // papers).
     Node* meld (Node* a, Node* b) {
         if (!this->compare(a->elt,b->elt)) {
+            std::cout << "meld a ";
             if (a->child != nullptr) {
+                std::cout << "with child\n";
                 Node* temp = a->child;
                 a->child = b;
                 b->parent = a;
                 b->sibling = temp;
             } else {
+                std::cout << "without child\n";
                 a->child = b;
                 b->parent = a;
             }
             return a;
         } else {
+            std::cout << "meld b ";
             if (b->child != nullptr) {
+                std::cout << "with child\n";
                 Node* temp = b->child;
                 b->child = a;
                 a->parent = b;
                 a->sibling = temp;
             } else {
+                std::cout << "without child\n";
                 b->child = a;
                 a->parent = b;
             }
