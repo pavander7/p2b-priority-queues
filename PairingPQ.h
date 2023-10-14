@@ -327,12 +327,16 @@ private:
     // papers).
     Node* meld (Node* a, Node* b) {
         if (!this->compare(a->elt,b->elt)) {
+            Node* temp = a->child;
             a->child = b;
             b->parent = a;
+            b->sibling = temp;
             return a;
         } else {
+            Node* temp = b->child;
             b->child = a;
             a->parent = b;
+            a->sibling = temp;
             return b;
         }
     }
