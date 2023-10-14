@@ -122,7 +122,7 @@ public:
         while (!empty()) {
             pop();
             //std::cout << size() << std::endl;
-        } delete root;
+        } //delete root;
         //count--;
     } // ~PairingPQ()
 
@@ -189,7 +189,7 @@ public:
         if (size() == 1) {
             //std::cout << "deleting root\n";
             //delete root;
-            root = nullptr;
+            //root = nullptr;
             //std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
             //std::cout << "deleting last child\n";
