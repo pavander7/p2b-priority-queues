@@ -187,13 +187,32 @@ public:
     // Runtime: Amortized O(log(n))
     virtual void pop() {
         // TODO: Implement this function.
-        if (size() == 1) {
+        if (root->child == root) {
+            std::cout << root << " " << root->child << " deleting (exception)\n";
+            std::deque<Node*> temp;
+            Node* f = root->child;
+            while (f != nullptr) {
+                temp.push_back(f);
+                Node* g = f->sibling;
+                f->sibling = nullptr;
+                f->parent = nullptr;
+                f = g;
+            } //std::deque<Node*> temp2;
+            while (temp.size() > 1) {
+                std::cout << temp.size() << std::endl;
+                Node* a = temp.front();
+                temp.pop_front();
+                Node* b = temp.front();
+                temp.pop_front();
+                temp.push_front(meld(a,b));
+            } count++;
+        } else if (size() == 1) {
             std::cout << root << " deleting root\n";
             delete root;
             root = nullptr;
             std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
-            std::cout << "deleting last child " << root << " " << root->child << root->child->child << "\n";
+            std::cout << "deleting last child " << root << " " << root->child << " " << root->child->child << "\n";
             if (!(root->child == root)) {
                 Node* temp = root;
                 root = root->child;
@@ -210,8 +229,16 @@ public:
                 f->sibling = nullptr;
                 f->parent = nullptr;
                 f = g;
-            } std::deque<Node*> temp2;
-            while (temp.size() > 1) { 
+            } //std::deque<Node*> temp2;
+            while (temp.size() > 1) {
+                std::cout << temp.size() << std::endl;
+                Node* a = temp.front();
+                temp.pop_front();
+                Node* b = temp.front();
+                temp.pop_front();
+                temp.push_front(meld(a,b));
+            }
+            /* while (temp.size() > 1) { 
                 std::cout << temp.size() << std::endl;
                 Node* a = temp.back();
                 temp.pop_back();
@@ -231,11 +258,11 @@ public:
                 Node* b = temp2.front();
                 temp2.pop_front();
                 temp2.push_front(meld(a,b));
-            } 
+            }  */
             std::cout << "passes complete\n";
-            std::cout << temp2.front() << "\n";
-            root = temp2.front();
-            temp2.pop_front();
+            std::cout << temp.front() << "\n";
+            root = temp.front();
+            temp.pop_front();
         }
         count--;
     } // pop()
