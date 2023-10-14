@@ -299,10 +299,10 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function 
         Node* baby = new Node(val);
+        std::cout << baby << std::endl;
         if (root == nullptr) {
             //std::cout << "first node pushed\n";
             root = baby;
-            // std::cout << baby << std::endl;
         } else if (!this->compare(root->elt,baby->elt)) {
             //std::cout << "pushing via swap\n";
             Node* temp = root->child;
