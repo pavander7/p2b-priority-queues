@@ -122,7 +122,7 @@ public:
         while (size() > 1) {
             pop();
             //std::cout << size() << std::endl;
-        } //delete root;
+        } delete root;
         //count--;
     } // ~PairingPQ()
 
