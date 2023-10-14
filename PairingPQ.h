@@ -189,7 +189,7 @@ public:
         if (size() == 1) {
             //std::cout << "deleting root\n";
             //delete root;
-            //root = nullptr;
+            root = nullptr;
             //std::cout << "node deleted (special)\n";
         } else if (size() == 2) {
             //std::cout << "deleting last child\n";
@@ -204,8 +204,9 @@ public:
                 temp.push_back(f);
                 Node* g = f->sibling;
                 f->sibling = nullptr;
+                f->parent = nullptr;
                 f = g;
-            } for (size_t y = temp.size(); y > 1; y--) { //(temp.size()+((temp.size()%size_t(2))/size_t(2)))
+            } for (size_t y = temp.size(); y > 1; y--) { 
                 Node* a = temp.back();
                 temp.pop_back();
                 Node* b = temp.back();
