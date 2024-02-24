@@ -227,7 +227,6 @@ void testUpdatePriorities() {
     auto& datum = data[0];
     datum = 10;
     eecsPQ.updatePriorities();
-    assert(false);
     assert(*eecsPQ.top() == 10);
     assert(eecsPQ.top() == &datum);
 

@@ -168,7 +168,7 @@ public:
         } while (!singles.empty()) {
             Node* temp = singles.front();
             add_in(temp);
-            hold.pop_front();
+            singles.pop_front();
         }
         // TODO: Implement this function.
     } // updatePriorities()
