@@ -283,10 +283,10 @@ public:
 
         while (b != nullptr) {
             hold.push_back(b);
+            b->previous = nullptr;
             a = b;
             b = a->sibling;
             a->sibling = nullptr;
-            b->previous = nullptr;
         } while (!hold.empty()) {
             add_in(hold.front());
             hold.pop_front();
