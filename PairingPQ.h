@@ -153,10 +153,11 @@ public:
         while (!hold.empty()) {
             Node* a = hold.front();
             Node* b = a->child;
+            hold.pop_front();
+            a->previous = nullptr;
             root = b;
             singles.push_back(a);
             a->child = nullptr;
-            b->previous = nullptr;
             while (b != nullptr) {
                 Node* c = b->sibling;
                 b->sibling = nullptr;

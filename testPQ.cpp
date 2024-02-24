@@ -206,6 +206,7 @@ void testHiddenData() {
 // Test the last public member function of Eecs281PQ, updatePriorities
 template <template <typename...> typename PQ>
 void testUpdatePriorities() {
+    std::cout << "Testing update priorities..." << std::endl;
     std::vector<int> data {
         1,
         5,
@@ -226,6 +227,7 @@ void testUpdatePriorities() {
     auto& datum = data[0];
     datum = 10;
     eecsPQ.updatePriorities();
+    assert(false);
     assert(*eecsPQ.top() == 10);
     assert(eecsPQ.top() == &datum);
 
@@ -233,6 +235,8 @@ void testUpdatePriorities() {
     eecsPQ.updatePriorities();
     assert(*eecsPQ.top() == 5);
     assert(eecsPQ.top() == &data[1]);
+
+    std::cout << "testUpdatePriorities succeeded!" << std::endl;
 
     // TODO: Add more testing here as you see fit.
 }
@@ -244,7 +248,7 @@ void testUpdatePriorities() {
 void testPairing() {
     std::cout << "Testing Pairing Heap separately..." << std::endl;
 
-    {
+    { 
         const std::vector<int> vec {
             1,
             0,
