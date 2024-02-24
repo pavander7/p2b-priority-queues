@@ -21,7 +21,7 @@ public:
             // TODO: After you add add one extra pointer (see below), be sure
             // to initialize it here.
             explicit Node(const TYPE &val)
-                : elt{ val }, child{ nullptr }, sibling{ nullptr }, parent{ nullptr}
+                : elt{ val }, child{ nullptr }, sibling{ nullptr }, previous{ nullptr }
             {}
 
             // Description: Allows access to the element at that Node's
@@ -41,8 +41,7 @@ public:
             TYPE elt;
             Node *child;
             Node *sibling;
-            Node *parent;
-            // TODO: Add one extra pointer (parent or previous) as desired.
+            Node *previous; // TODO: Add one extra pointer (parent or previous) as desired.
     }; // Node
 
 
@@ -54,6 +53,7 @@ public:
         // TODO: Implement this function.
         root = nullptr;
         count = 0;
+        this->compare = comp;
     } // PairingPQ()
 
 
@@ -64,14 +64,17 @@ public:
     PairingPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function.
-        root = nullptr;
-        count = 0;
-        for (InputIterator w = start; w != end; w++) {
-            push(*w);
-        } 
+        this->compare = comp;
+        InputIterator here = start;
+        while (here != end) {
+            push(*here);
+            here++;
+        }
 
-        //(void)start;  // Delete this line when you implement this function
-        //(void)end;  // Delete this line when you implement this function
+        /*
+        (void)start;  // Delete this line when you implement this function
+        (void)end;  // Delete this line when you implement this function
+        */
     } // PairingPQ()
 
 
@@ -84,17 +87,23 @@ public:
         //       but it must still be a valid pairing heap.
         root = nullptr;
         count = 0;
-        std::deque<Node*> intake;
-        intake.push_back(other.root);
-        while (!intake.empty()) {
-            if (intake.front()->sibling != nullptr) {
-                intake.push_back(intake.front()->sibling);
+        this->compare = other.compare;
+        std::deque<Node*> singles;
+        std::deque<Node*> hold;
+        hold.push_back(other.root);
+        while (!hold.empty()) {
+            Node* a = hold.front();
+            Node* b = a->child;
+            hold.pop_front();
+            singles.push_back(a);
+            while (b != nullptr) {
+                hold.push_back(b);
+                b = b->sibling;
             }
-            if (intake.front()->child != nullptr) {
-                intake.push_back(intake.front()->child);
-            }
-            this->push(intake.front()->elt);
-            intake.pop_front();
+        } while (!singles.empty()) {
+            Node* temp = singles.front();
+            this->push(temp->getElt());
+            singles.pop_front();
         }
     } // PairingPQ()
 
@@ -105,9 +114,10 @@ public:
         // TODO: Implement this function.
         // HINT: Use the copy-swap method from the "Arrays and Containers"
         // lecture.
-        // (void)rhs;  // Delete this line when you implement this function
+        //(void)rhs;  // Delete this line when you implement this function
         root = nullptr;
         count = 0;
+        this->compare = rhs.compare;
         PairingPQ temp(rhs);
         std::swap(root,temp.root);
         std::swap(count,temp.count);
@@ -118,13 +128,12 @@ public:
     // Description: Destructor
     // Runtime: O(n)
     ~PairingPQ() {
+        while (!this->empty()) {
+            Node* temp = root;
+            this->pop();
+            delete temp;
+        }
         // TODO: Implement this function.
-        while (size() > 0) {
-            pop();
-            //std::cout << size() << std::endl;
-        } //if (root != nullptr) delete root;
-        //count--;
-        std::cout << "deconstruct complete\n";
     } // ~PairingPQ()
 
 
@@ -134,37 +143,29 @@ public:
     //              and create new ones!
     // Runtime: O(n)
     virtual void updatePriorities() {
-        // TODO: Implement this function.
-        std::deque<Node*> intake;
-        std::deque<Node*> temp;
-        intake.push_back(root);
-        root = nullptr;
-        while (!intake.empty()) {
-            if (intake.front()->sibling != nullptr) {
-                intake.push_back(intake.front()->sibling);
+        std::deque<Node*> singles;
+        std::deque<Node*> hold;
+        hold.push_back(root);
+        while (!hold.empty()) {
+            Node* a = hold.front();
+            Node* b = a->child;
+            root = b;
+            singles.push_back(a);
+            a->child = nullptr;
+            b->previous = nullptr;
+            while (b != nullptr) {
+                Node* c = b->sibling;
+                b->sibling = nullptr;
+                c->previous = nullptr;
+                hold.push_back(b);
+                b = c;
             }
-            if (intake.front()->child != nullptr) {
-                intake.push_back(intake.front()->child);
-            }
-            temp.push_back(intake.front());
-            intake.pop_front();
+        } while (!singles.empty()) {
+            Node* temp = singles.front();
+            add_in(temp);
+            hold.pop_front();
         }
-        root = temp.front();
-        temp.pop_front();
-        for (size_t y = temp.size(); y > 1; y--) { //(temp.size()+((temp.size()%size_t(2))/size_t(2)))
-            Node* a = temp.back();
-            temp.pop_back();
-            Node* b = temp.back();
-            temp.pop_back();
-            temp.push_front(meld(a,b));
-        } while (temp.size() > 1) {
-            Node* a = temp.front();
-            temp.pop_front();
-            Node* b = temp.front();
-            temp.pop_front();
-            temp.push_front(meld(a,b));
-        } 
-        root = temp.front();
+        // TODO: Implement this function.
     } // updatePriorities()
 
 
@@ -174,7 +175,7 @@ public:
     //              addNode().
     // Runtime: O(1)
     virtual void push(const TYPE &val) {
-        addNode(val);    
+        addNode(val);
     } // push()
 
 
@@ -187,88 +188,24 @@ public:
     // Runtime: Amortized O(log(n))
     virtual void pop() {
         // TODO: Implement this function.
-        if (root->child == root) {
-            std::cout << root << " " << root->child << " deleting (exception)\n";
-            std::deque<Node*> temp;
-            Node* f = root->child;
-            while (f != nullptr) {
-                temp.push_back(f);
-                Node* g = f->sibling;
-                f->sibling = nullptr;
-                f->parent = nullptr;
-                f = g;
-            } //std::deque<Node*> temp2;
-            while (temp.size() > 1) {
-                std::cout << temp.size() << std::endl;
-                Node* a = temp.front();
-                temp.pop_front();
-                Node* b = temp.front();
-                temp.pop_front();
-                temp.push_front(meld(a,b));
-            } count++;
-            std::cout << "passes complete\n";
-            std::cout << temp.front() << "\n";
-            root = temp.front();
-            temp.pop_front();
-        } else if (size() == 1) {
-            std::cout << root << " deleting root\n";
-            delete root;
-            root = nullptr;
-            std::cout << "node deleted (special)\n";
-        } else if (size() == 2) {
-            std::cout << "deleting last child " << root << " " << root->child /*<< " " << root->child->child*/ << "\n";
-            if (!(root->child == root)) {
-                Node* temp = root;
-                root = root->child;
-                delete temp;
-            } else root->child = nullptr;
-        } else {
-            std::cout << root << " " << root->child << " deleting (normal)\n";
-            std::deque<Node*> temp;
-            Node* f = root->child;
-            delete root;
-            while (f != nullptr) {
-                temp.push_back(f);
-                Node* g = f->sibling;
-                f->sibling = nullptr;
-                f->parent = nullptr;
-                f = g;
-            } //std::deque<Node*> temp2;
-            while (temp.size() > 1) {
-                std::cout << temp.size() << std::endl;
-                Node* a = temp.front();
-                temp.pop_front();
-                Node* b = temp.front();
-                temp.pop_front();
-                temp.push_front(meld(a,b));
-            }
-            /* while (temp.size() > 1) { 
-                std::cout << temp.size() << std::endl;
-                Node* a = temp.back();
-                temp.pop_back();
-                Node* b = temp.back();
-                temp.pop_back();
-                temp2.push_front(meld(a,b));
-            } if (temp.size() == 1) {
-                std::cout << "what\n";
-                temp2.push_front(temp.back());
-                temp.pop_back();
-            } else {
-                std::cout << temp.size() << temp2.size() << " nope\n";
-            } while (temp2.size() > 1) {
-                std::cout << "pass 2\n";
-                Node* a = temp2.front();
-                temp2.pop_front();
-                Node* b = temp2.front();
-                temp2.pop_front();
-                temp2.push_front(meld(a,b));
-            }  */
-            std::cout << "passes complete\n";
-            std::cout << temp.front() << "\n";
-            root = temp.front();
-            temp.pop_front();
-        }
+        std::deque<Node*> hold;
+        Node* a = root;
+        Node* b = a->child;
+        delete a;
+        root = b;
         count--;
+        while (b != nullptr) {
+            hold.push_back(b);
+            a = b;
+            b = a->sibling;
+            a->sibling = nullptr;
+            b->previous = nullptr;
+        } while (!hold.empty()) {
+            Node* temp = hold.front();
+            add_in(temp);
+            hold.pop_front();
+        }
+        // sever family ties, store children in hold, addNode the children back
     } // pop()
 
 
@@ -280,10 +217,10 @@ public:
     // Runtime: O(1)
     virtual const TYPE &top() const {
         // TODO: Implement this function
-
+        return (root->getElt());
         // These lines are present only so that this provided file compiles.
-        //static TYPE temp; // TODO: Delete this line
-        return root->elt;      // TODO: Delete or change this line
+        /* static TYPE temp; // TODO: Delete this line
+        return temp;      // TODO: Delete or change this line */
     } // top()
 
 
@@ -291,7 +228,8 @@ public:
     // Runtime: O(1)
     virtual std::size_t size() const {
         // TODO: Implement this function
-        return count; // TODO: Delete or change this line
+        return count;
+        //return 0; // TODO: Delete or change this line
     } // size()
 
     // Description: Return true if the pairing heap is empty.
@@ -312,24 +250,32 @@ public:
     // Runtime: As discussed in reading material.
     void updateElt(Node* node, const TYPE &new_value) {
         // TODO: Implement this function
-        Node* current = node;
+        Node* tSib = node->sibling;
+        Node* tPre = node->previous;
+        std::deque<Node*> hold;
+        Node* a = node;
+        Node* b = a->child;
+
+        node->sibling = nullptr;
+        node->child = nullptr;
+        node->prev = nullptr;
+
         node->elt = new_value;
-        while (this->compare(current,current->parent)) {
-            Node* temp = current->parent;
-            current->parent = temp->parent;
-            temp->parent = current;
-            temp->child = current->child;
-            current->child = temp;
-            Node* temp2 = current->sibling;
-            current->sibling = temp->sibling;
-            temp->sibling = temp2;
-            if (temp == root) {
-                root = current;
-                break;
-            }
+        hold.push_back(node);
+
+        while (b != nullptr) {
+            hold.push_back(b);
+            a = b;
+            b = a->sibling;
+            a->sibling = nullptr;
+            b->previous = nullptr;
+        } while (!hold.empty()) {
+            addNode(hold.front());
+            hold.pop();
         }
-        //(void)node;  // Delete this line when you implement this function
-        //(void)new_value;  // Delete this line when you implement this func
+
+        /* (void)node;  // Delete this line when you implement this function
+        (void)new_value;  // Delete this line when you implement this func */
     } // updateElt()
 
 
@@ -341,66 +287,46 @@ public:
     //       until it is eliminated by the user calling pop(). Remember this
     //       when you implement updateElt() and updatePriorities().
     Node* addNode(const TYPE &val) {
-        // TODO: Implement this function 
-        Node* baby = new Node(val);
-        std::cout << "adding " << baby << std::endl;
-        if (root == nullptr) {
-            //std::cout << "first node pushed\n";
-            root = baby;
-        } else if (!this->compare(root->elt,baby->elt)) {
-            //std::cout << "pushing via swap\n";
-            Node* temp = root->child;
-            root->child = baby;
-            baby->sibling = temp;
+        // TODO: Implement this function
+        Node* her = new Node(val);
+        if (this->compare(her->getElt(),root->getElt())) {
+            root->previous = her;
+            her->child = root;
+            root = her;
         } else {
-            //std::cout << "pushing via rebase\n";
-            baby->child = root;
-            root = baby;
-        } count++;
-        //(void)val;  // Delete this line when you implement this function
-        return baby; // TODO: Delete or change this line
+            Node* a = root->child;
+            while (a->sibling != nullptr) {
+                a = a->sibling;
+            } a->sibling = her;
+            her->previous = a;
+        }
+        return her;
+        /* (void)val;  // Delete this line when you implement this function
+        return nullptr; // TODO: Delete or change this line */
     } // addNode()
 
 
 private:
     // TODO: Add any additional member variables or member functions you
     // require here.
-    Node* root;
-    size_t count;
     // TODO: We recommend creating a 'meld' function (see the Pairing Heap
     // papers).
-    Node* meld (Node* a, Node* b) {
-        if (!this->compare(a->elt,b->elt)) {
-            std::cout << "meld a ";
-            if (a->child != nullptr) {
-                std::cout << "with child\n";
-                Node* temp = a->child;
-                a->child = b;
-                b->parent = a;
-                b->sibling = temp;
-            } else {
-                std::cout << "without child\n";
-                a->child = b;
-                b->parent = a;
-            }
-            return a;
+    void add_in (Node* her) {
+        if (this->compare(her->getElt(),root->getElt())) {
+            root->previous = her;
+            her->child = root;
+            root = her;
         } else {
-            std::cout << "meld b ";
-            if (b->child != nullptr) {
-                std::cout << "with child\n";
-                Node* temp = b->child;
-                b->child = a;
-                a->parent = b;
-                a->sibling = temp;
-            } else {
-                std::cout << "without child\n";
-                b->child = a;
-                a->parent = b;
-            }
-            return b;
+            Node* a = root->child;
+            while (a->sibling != nullptr) {
+                a = a->sibling;
+            } a->sibling = her;
+            her->previous = a;
         }
     }
 
+    Node* root;
+    size_t count;
     // NOTE: For member variables, you are only allowed to add a "root
     //       pointer" and a "count" of the number of nodes. Anything else
     //       (such as a deque) should be declared inside of member functions
