@@ -191,7 +191,7 @@ public:
     // Runtime: Amortized O(log(n))
     virtual void pop() {
         // TODO: Implement this function.
-        if (this->size == 1) {
+        if (this->size() == 1) {
             delete root;
         } else {
             std::deque<Node*> hold;
