@@ -6,6 +6,7 @@
 #include "Eecs281PQ.h"
 #include <deque>
 #include <utility>
+#include <cassert>
 
 // A specialized version of the priority queue ADT implemented as a pairing
 // heap.
@@ -64,6 +65,8 @@ public:
     PairingPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function.
+        this->count = 0;
+        this->root = nullptr;
         this->compare = comp;
         InputIterator here = start;
         while (here != end) {
@@ -85,7 +88,7 @@ public:
         // TODO: Implement this function.
         // NOTE: The structure does not have to be identical to the original,
         //       but it must still be a valid pairing heap.
-        root = nullptr;
+        root = other.root;
         count = 0;
         this->compare = other.compare;
         std::deque<Node*> singles;
@@ -217,6 +220,7 @@ public:
     // Runtime: O(1)
     virtual const TYPE &top() const {
         // TODO: Implement this function
+        assert(this->root != nullptr);
         return (root->getElt());
         // These lines are present only so that this provided file compiles.
         /* static TYPE temp; // TODO: Delete this line
@@ -291,20 +295,8 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function
         Node* her = new Node(val);
+        add_in(her);
         count++;
-        if (root == nullptr) {
-            her = root;
-        } else if (this->compare(her->getElt(),root->getElt())) {
-            root->previous = her;
-            her->child = root;
-            root = her;
-        } else {
-            Node* a = root->child;
-            while (a->sibling != nullptr) {
-                a = a->sibling;
-            } a->sibling = her;
-            her->previous = a;
-        }
         return her;
         /* (void)val;  // Delete this line when you implement this function
         return nullptr; // TODO: Delete or change this line */
@@ -317,16 +309,18 @@ private:
     // TODO: We recommend creating a 'meld' function (see the Pairing Heap
     // papers).
     void add_in (Node* her) {
-        if (this->compare(her->getElt(),root->getElt())) {
+        if (this->empty()) {
+            her = root;
+        } else if (this->compare(her->getElt(),root->getElt())) {
             root->previous = her;
             her->child = root;
             root = her;
         } else {
-            Node* a = root->child;
-            while (a->sibling != nullptr) {
-                a = a->sibling;
-            } a->sibling = her;
-            her->previous = a;
+            Node* him = root->child;
+            root->child = her;
+            her->previous = root;
+            her->sibling = him;
+            him->previous = her;
         }
     }
 
