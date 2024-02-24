@@ -276,7 +276,7 @@ public:
         node->child = nullptr;
         node->previous = nullptr;
 
-        tSib->previous = tPre;
+        if(tSib != nullptr) tSib->previous = tPre;
 
         node->elt = new_value;
         hold.push_back(node);
