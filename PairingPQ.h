@@ -131,21 +131,23 @@ public:
     // Description: Destructor
     // Runtime: O(n)
     ~PairingPQ() {
-        std::deque<Node*> hold;
         if (root != nullptr) {
+            std::deque<Node*> hold;
             hold.push_back(root);
             while (!hold.empty()) {
                 Node* temp = hold.front();
-                hold.pop_front();
-                Node* b = temp->child;
-                delete temp;
-                while (b != nullptr) {
-                    Node* c = b->sibling;
-                    b->sibling = nullptr;
-                    if(c != nullptr) c->previous = nullptr;
-                    hold.push_back(b);
-                    b = c;
+                if (temp != nullptr) {
+                    Node* b = temp->child;
+                    delete temp;
+                    while (b != nullptr) {
+                        Node* c = b->sibling;
+                        b->sibling = nullptr;
+                        if(c != nullptr) c->previous = nullptr;
+                        hold.push_back(b);
+                        b = c;
+                    }
                 }
+                hold.pop_front();
             }
         }
         
