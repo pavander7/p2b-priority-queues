@@ -191,22 +191,26 @@ public:
     // Runtime: Amortized O(log(n))
     virtual void pop() {
         // TODO: Implement this function.
-        std::deque<Node*> hold;
-        Node* a = root;
-        Node* b = a->child;
-        delete a;
-        root = b;
-        count--;
-        while (b != nullptr) {
-            hold.push_back(b);
-            a = b;
-            b = a->sibling;
-            a->sibling = nullptr;
-            b->previous = nullptr;
-        } while (!hold.empty()) {
-            Node* temp = hold.front();
-            add_in(temp);
-            hold.pop_front();
+        if (this->size == 1) {
+            delete root;
+        } else {
+            std::deque<Node*> hold;
+            Node* a = root;
+            Node* b = a->child;
+            delete a;
+            root = b;
+            count--;
+            while (b != nullptr) {
+                hold.push_back(b);
+                a = b;
+                b = a->sibling;
+                if(a->sibling != nullptr) a->sibling = nullptr;
+                if(b->previous != nullptr) b->previous = nullptr;
+            } while (!hold.empty()) {
+                Node* temp = hold.front();
+                add_in(temp);
+                hold.pop_front();
+            }
         }
         // sever family ties, store children in hold, addNode the children back
     } // pop()
