@@ -127,37 +127,6 @@ void testPrimitiveOperations() {
         vec.push_back(q);
     }
 
-    /*
-    Eecs281PQ<int> pq3(vec.begin(), vec.end(), std::less);
-    assert(pq3.size() == 10);
-    assert(pq3.top() == 9);
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    pq3.push(5);
-    assert(pq3.size() == 8);
-    assert(pq3.top() == 6);
-    assert(not pq3.empty());
-    pq3.pop();
-    assert(pq3.size() == 7);
-    assert(pq3.top() == 5);
-    pq3.pop();
-    assert(pq3.size() == 6);
-    assert(pq3.top() == 5);
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 3);
-    assert(pq3.top() == 2);
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.top() == 1);
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.empty);
-    */
-
     std::cout << "testPrimitiveOperations succeeded!" << std::endl;
 }
 
@@ -229,41 +198,6 @@ void testHiddenData() {
     eecsPQ2.pop();
     assert(eecsPQ2.size() == 0);
     assert(eecsPQ2.empty());
-
-    /*
-    std::vector<int> vec;
-    for (int q = 0; q < 10; q++) {
-        vec.push_back({q});
-    }
-
-    Eecs281PQ<int> pq3(vec.begin(), vec.end(), HiddenDataComp);
-    assert(pq3.size() == 10);
-    assert(pq3.top() == {9});
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    pq3.push({5});
-    assert(pq3.size() == 8);
-    assert(pq3.top() == {6});
-    assert(not pq3.empty());
-    pq3.pop();
-    assert(pq3.size() == 7);
-    assert(pq3.top() == {5});
-    pq3.pop();
-    assert(pq3.size() == 6);
-    assert(pq3.top() == {5});
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 3);
-    assert(pq3.top() == {2});
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.top() == {1});
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.empty); */
 
     std::cout << "testHiddenData succeeded!" << std::endl;
 }

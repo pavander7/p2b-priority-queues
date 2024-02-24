@@ -7,6 +7,7 @@
 #include <deque>
 #include <utility>
 #include <cassert>
+#include <iostream>
 
 // A specialized version of the priority queue ADT implemented as a pairing
 // heap.
@@ -192,20 +193,23 @@ public:
     virtual void pop() {
         // TODO: Implement this function.
         if (this->size() == 1) {
-            delete root;
+            Node* her = root;
+            root = nullptr;
+            delete her;
+            count--;
         } else {
             std::deque<Node*> hold;
             Node* a = root;
             Node* b = a->child;
+            root = nullptr;
             delete a;
-            root = b;
             count--;
             while (b != nullptr) {
                 hold.push_back(b);
+                b->previous = nullptr;
                 a = b;
                 b = a->sibling;
-                if(a->sibling != nullptr) a->sibling = nullptr;
-                if(b->previous != nullptr) b->previous = nullptr;
+                a->sibling = nullptr;
             } while (!hold.empty()) {
                 Node* temp = hold.front();
                 add_in(temp);
@@ -313,15 +317,13 @@ private:
     // TODO: We recommend creating a 'meld' function (see the Pairing Heap
     // papers).
     void add_in (Node* her) {
-        if (this->empty()) {
+        if (this->root == nullptr) {
             root = her;
         } else if (this->compare(root->getElt(),her->getElt())) {
-            assert(this->root != nullptr);
             root->previous = her;
             her->child = root;
             root = her;
         } else {
-            assert(this->root != nullptr);
             if (root->child == nullptr) {
                 root->child = her;
                 her->previous = root;
