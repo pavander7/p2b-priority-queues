@@ -160,7 +160,7 @@ public:
             while (b != nullptr) {
                 Node* c = b->sibling;
                 b->sibling = nullptr;
-                c->previous = nullptr;
+                if(c != nullptr) c->previous = nullptr;
                 hold.push_back(b);
                 b = c;
             }
