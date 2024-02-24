@@ -289,7 +289,10 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function
         Node* her = new Node(val);
-        if (this->compare(her->getElt(),root->getElt())) {
+        count++;
+        if (root == nullptr) {
+            her = root;
+        } else if (this->compare(her->getElt(),root->getElt())) {
             root->previous = her;
             her->child = root;
             root = her;
