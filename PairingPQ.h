@@ -310,12 +310,14 @@ private:
     // papers).
     void add_in (Node* her) {
         if (this->empty()) {
-            her = root;
+            root = her;
         } else if (this->compare(her->getElt(),root->getElt())) {
+            assert(this->root != nullptr);
             root->previous = her;
             her->child = root;
             root = her;
         } else {
+            assert(this->root != nullptr);
             Node* him = root->child;
             root->child = her;
             her->previous = root;
