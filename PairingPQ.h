@@ -311,18 +311,23 @@ private:
     void add_in (Node* her) {
         if (this->empty()) {
             root = her;
-        } else if (this->compare(her->getElt(),root->getElt())) {
+        } else if (this->compare(root->getElt(),her->getElt())) {
             assert(this->root != nullptr);
             root->previous = her;
             her->child = root;
             root = her;
         } else {
             assert(this->root != nullptr);
-            Node* him = root->child;
-            root->child = her;
-            her->previous = root;
-            her->sibling = him;
-            him->previous = her;
+            if (root->child == nullptr) {
+                root->child = her;
+                her->previous = root;
+            } else {
+                Node* him = root->child;
+                root->child = her;
+                her->previous = root;
+                her->sibling = him;
+                him->previous = her;
+            }
         }
     }
 
