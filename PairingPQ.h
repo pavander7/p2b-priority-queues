@@ -216,6 +216,7 @@ public:
                 a->sibling = nullptr;
             } while (!hold.empty()) {
                 Node* temp = hold.front();
+                assert(temp != nullptr);
                 add_in(temp);
                 hold.pop_front();
             }
