@@ -23,6 +23,7 @@ public:
     explicit SortedPQ(COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function, or verify that it is already done
+        this->compare = comp;
     } // SortedPQ
 
 
@@ -33,6 +34,7 @@ public:
     SortedPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function
+        this->compare = comp;
         for (InputIterator w = start; w != end; w++) {
             data.push_back(*w);
         } 

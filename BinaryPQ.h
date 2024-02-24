@@ -19,6 +19,7 @@ public:
     explicit BinaryPQ(COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function, or verify that it is already done
+        this->compare = comp;
         // data.push_back(TYPE()); //FIX THIS SHIT
     } // BinaryPQ
 
@@ -31,6 +32,7 @@ public:
         BaseClass{ comp } {
         // TODO: Implement this function
         // BinaryPQ(comp);
+        this->compare = comp;
         for (InputIterator w = start; w != end; w++) {
             push(*w);
         } 
@@ -50,17 +52,17 @@ public:
     // Runtime: O(n)
     virtual void updatePriorities() {
         // TODO: Implement this function.
-        std::cout << "updating priorities on array of size " << data.size() << "...\n";
+        //std::cout << "updating priorities on array of size " << data.size() << "...\n";
         for (size_t w = data.size() - size_t(1); w > 0; w--) {
-            std::cout << w << std::endl;
+            //std::cout << w << std::endl;
             if (this->compare(data[parent(w)],data[w])) {
-                std::cout << "swapping: " << parent(w) << " & " << w << std::endl;
+                //std::cout << "swapping: " << parent(w) << " & " << w << std::endl;
                 TYPE temp = data[w];
                 data[w] = data[parent(w)];
                 data[parent(w)] = temp;
-            } else std::cout << "no swap made on " << w << " & " << child_l(w) << "\n";
+            } //else std::cout << "no swap made on " << w << " & " << child_l(w) << "\n";
         }
-        std::cout << "priorities updated.\n";
+        //std::cout << "priorities updated.\n";
 
     } // updatePriorities()
 

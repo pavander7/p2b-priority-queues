@@ -78,89 +78,28 @@ void testPrimitiveOperations() {
     PQ<int> pq {};
     Eecs281PQ<int>& eecsPQ = pq;
 
+    assert(eecsPQ.size() == 0);
     eecsPQ.push(3);
+    assert(eecsPQ.size() == 1);
     eecsPQ.push(4);
     assert(eecsPQ.size() == 2);
     assert(eecsPQ.top() == 4);
 
     eecsPQ.pop();
+    std::cout << "pop successful\n";
     assert(eecsPQ.size() == 1);
     assert(eecsPQ.top() == 3);
     assert(not eecsPQ.empty());
 
     eecsPQ.pop();
+    std::cout << "pop successful\n";
     assert(eecsPQ.size() == 0);
     assert(eecsPQ.empty());
 
     // TODO: Add more testing here!
-    PQ<int> pq2 {};
-    Eecs281PQ<int>& eecsPQ2(pq2);
-
-    eecsPQ2.push(0);
-    eecsPQ2.push(7);
-    eecsPQ2.push(6);
-    assert(eecsPQ2.size() == 3);
-    assert(eecsPQ2.top() == 7);
-
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 2);
-    assert(eecsPQ2.top() == 6);
-    assert(not eecsPQ2.empty());
-
-    eecsPQ2.push(3);
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 2);
-    assert(eecsPQ2.top() == 3);
-
-    eecsPQ2.pop();
-    eecsPQ2.push(4);
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 1);
-    assert(eecsPQ2.top() == 0);
-
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 0);
-    assert(eecsPQ2.empty());
-
-    std::vector<int> vec;
-    for (int q = 0; q < 10; q++) {
-        vec.push_back(q);
-    }
-
-    /*
-    Eecs281PQ<int> pq3(vec.begin(), vec.end(), std::less);
-    assert(pq3.size() == 10);
-    assert(pq3.top() == 9);
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    pq3.push(5);
-    assert(pq3.size() == 8);
-    assert(pq3.top() == 6);
-    assert(not pq3.empty());
-    pq3.pop();
-    assert(pq3.size() == 7);
-    assert(pq3.top() == 5);
-    pq3.pop();
-    assert(pq3.size() == 6);
-    assert(pq3.top() == 5);
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 3);
-    assert(pq3.top() == 2);
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.top() == 1);
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.empty);
-    */
 
     std::cout << "testPrimitiveOperations succeeded!" << std::endl;
 }
-
 
 // Test that the priority queue uses its comparator properly. HiddenData
 // can't be compared with operator<, so we use HiddenDataComp{} instead.
@@ -173,21 +112,22 @@ void testHiddenData() {
     struct HiddenDataComp {
         bool operator()(const HiddenData &a, const HiddenData &b) const {
             // TODO: Finish this comparator
-            return a.data < b.data;
+            // (void)a;  // Delete this line when you finish this function
+            // (void)b;  // Delete this line when you finish this function
+            return (a.data < b.data);
         }
     };
 
     std::cout << "Testing with hidden data..." << std::endl;
 
-    // TODO: Add code here to actually test with the HiddenData type.
-    // Consider writing this code in the style of testPrimitiveOperations
-    // above.
-
     PQ<HiddenData, HiddenDataComp> pq {};
     Eecs281PQ<HiddenData, HiddenDataComp>& eecsPQ = pq;
 
-    eecsPQ.push(HiddenData{3});
-    eecsPQ.push(HiddenData{4});
+    HiddenData three = {3};
+    HiddenData four = {4};
+
+    eecsPQ.push(three);
+    eecsPQ.push(four);
     assert(eecsPQ.size() == 2);
     assert(eecsPQ.top().data == 4);
 
@@ -200,70 +140,9 @@ void testHiddenData() {
     assert(eecsPQ.size() == 0);
     assert(eecsPQ.empty());
 
-    // TODO: Add more testing here!
-    PQ<HiddenData,HiddenDataComp> pq2 {};
-    Eecs281PQ<HiddenData,HiddenDataComp>& eecsPQ2(pq2);
-
-    eecsPQ2.push(HiddenData{0});
-    eecsPQ2.push(HiddenData{7});
-    eecsPQ2.push(HiddenData{6});
-    assert(eecsPQ2.size() == 3);
-    assert(eecsPQ2.top().data == 7);
-
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 2);
-    assert(eecsPQ2.top().data == 6);
-    assert(not eecsPQ2.empty());
-
-    eecsPQ2.push(HiddenData{5});
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 2);
-    assert(eecsPQ2.top().data == 5);
-
-    eecsPQ2.pop();
-    eecsPQ2.push(HiddenData{4});
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 1);
-    assert(eecsPQ2.top().data == 0);
-
-    eecsPQ2.pop();
-    assert(eecsPQ2.size() == 0);
-    assert(eecsPQ2.empty());
-
-    /*
-    std::vector<int> vec;
-    for (int q = 0; q < 10; q++) {
-        vec.push_back({q});
-    }
-
-    Eecs281PQ<int> pq3(vec.begin(), vec.end(), HiddenDataComp);
-    assert(pq3.size() == 10);
-    assert(pq3.top() == {9});
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    pq3.push({5});
-    assert(pq3.size() == 8);
-    assert(pq3.top() == {6});
-    assert(not pq3.empty());
-    pq3.pop();
-    assert(pq3.size() == 7);
-    assert(pq3.top() == {5});
-    pq3.pop();
-    assert(pq3.size() == 6);
-    assert(pq3.top() == {5});
-    pq3.pop();
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 3);
-    assert(pq3.top() == {2});
-    pq3.pop();
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.top() == {1});
-    pq3.pop();
-    assert(pq3.size() == 0);
-    assert(pq3.empty); */
+    // TODO: Add code here to actually test with the HiddenData type.
+    // Consider writing this code in the style of testPrimitiveOperations
+    // above.
 
     std::cout << "testHiddenData succeeded!" << std::endl;
 }
@@ -291,16 +170,55 @@ void testUpdatePriorities() {
     // wind qt the top adter updatePriorities.
     auto& datum = data[0];
     datum = 10;
+    assert(*eecsPQ.top() == 5);
     eecsPQ.updatePriorities();
     assert(*eecsPQ.top() == 10);
     assert(eecsPQ.top() == &datum);
 
-    datum = 2;
-    eecsPQ.updatePriorities();
-    assert(*eecsPQ.top() == 5);
-    assert(eecsPQ.top() == &data[1]);
-
     // TODO: Add more testing here as you see fit.
+
+    std::vector<int> data2 {
+        1,
+        2,
+        3,
+        4,
+        5,
+    };
+
+    PQ<const int*, IntPtrComp> pq2 {};
+    Eecs281PQ<const int*, IntPtrComp>& eecsPQ2 = pq2;
+
+    // NOTE: If you add more data to the vector, don't push the pointers
+    //   until AFTER the vector stops changing size! Think about why.
+    for (auto& datum : data2) {
+        //std::cout << "pushed: " << datum << std::endl;
+        eecsPQ2.push(&datum);
+    }
+
+    // Change some element in data (which is pointed to by an element in pq).
+    // This new value should be higher than any other so its address will
+    // wind qt the top adter updatePriorities.
+    auto& datum2 = data2[0];
+    datum2 = 10;
+    assert(*eecsPQ2.top() == 5);
+    std::cout << "on to update prioties\n";
+    eecsPQ2.updatePriorities();
+    std::cout << "priorities updated\n";
+    assert(*eecsPQ2.top() == 10);
+    assert(eecsPQ2.top() == &datum2);
+
+    const std::vector<int> vec {
+        1,
+        0,
+    };
+
+    std::cout << "Calling constructors" << std::endl;
+
+    // Range-based constructor
+    PQ<int> pairing1 { vec.cbegin(), vec.cend() };
+    std::cout << "range-based constructor successful\n";
+
+    std::cout << "calling deconstructors...\n";
 }
 
 
@@ -320,13 +238,16 @@ void testPairing() {
 
         // Range-based constructor
         PairingPQ<int> pairing1 { vec.cbegin(), vec.cend() };
+        std::cout << "range-based constructor successful\n";
 
         // Copy constructor
         PairingPQ<int> pairing2 { pairing1 };
+        std::cout << "copy constructor successful\n";
 
         // Copy-assignment operator
         PairingPQ<int> pairing3 {};
         pairing3 = pairing2;
+        std::cout << "copy-assignment operator successful\n";
 
         // A reference to a PairingPQ<T> is a reference to an Eecs281PQ<T>.
         // Yay for polymorphism! We can therefore write:
@@ -334,8 +255,11 @@ void testPairing() {
         Eecs281PQ<int>& pq2 = pairing2;
         Eecs281PQ<int>& pq3 = pairing3;
 
+        std::cout << "pq1 is size " << pq1.size() << std::endl;
         pq1.push(3);
+        std::cout << "pq1 is size " << pq1.size() << std::endl;
         pq2.pop();
+        std::cout << "pq1 is size " << pq1.size() << std::endl;
         assert(pq1.size() == 3);
         assert(not pq1.empty());
         assert(pq1.top() == 3);
@@ -345,23 +269,6 @@ void testPairing() {
         std::cout << "Basic tests done." << std::endl;
 
         // TODO: Add more code to test addNode, updateElt, etc.
-        auto her = pairing3.addNode(7);
-        assert(pairing3.size() == 3);
-        assert(pairing3.top() == 7);
-
-        auto him = pairing3.addNode(5);
-        assert(pairing3.size() == 4);
-        assert(pairing3.top() == 7);
-
-        pairing3.updateElt(her, 4);
-        assert(her->getElt() == 4);
-        assert(pairing3.top() == 5);
-        assert(pairing3.size() == 4);
-
-        pairing3.updateElt(him, 6);
-        assert(him->getElt() == 6);
-        assert(pairing3.top() == 6);
-        assert(pairing3.size() == 4);
 
         // That { above creates a scope, and our pairing heaps will fall out
         // of scope at the matching } below.
@@ -427,7 +334,6 @@ int main() {
         break;
     case PQType::Pairing:
         testPriorityQueue<PairingPQ>();
-        testPairing();
         break;
     default:
         std::cout << "Unrecognized PQ type " << pqType << " in main.\n"

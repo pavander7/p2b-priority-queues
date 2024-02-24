@@ -258,7 +258,9 @@ public:
 
         node->sibling = nullptr;
         node->child = nullptr;
-        node->prev = nullptr;
+        node->previous = nullptr;
+
+        tSib->previous = tPre;
 
         node->elt = new_value;
         hold.push_back(node);
@@ -270,8 +272,8 @@ public:
             a->sibling = nullptr;
             b->previous = nullptr;
         } while (!hold.empty()) {
-            addNode(hold.front());
-            hold.pop();
+            add_in(hold.front());
+            hold.pop_front();
         }
 
         /* (void)node;  // Delete this line when you implement this function
