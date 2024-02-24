@@ -89,7 +89,7 @@ public:
         // TODO: Implement this function.
         // NOTE: The structure does not have to be identical to the original,
         //       but it must still be a valid pairing heap.
-        root = other.root;
+        root = nullptr;
         count = 0;
         this->compare = other.compare;
         std::deque<Node*> singles;
@@ -119,9 +119,8 @@ public:
         // HINT: Use the copy-swap method from the "Arrays and Containers"
         // lecture.
         //(void)rhs;  // Delete this line when you implement this function
-        root = nullptr;
-        count = 0;
-        this->compare = rhs.compare;
+        this->root = nullptr;
+        this->count = 0;
         PairingPQ temp(rhs);
         std::swap(root,temp.root);
         std::swap(count,temp.count);
@@ -133,9 +132,7 @@ public:
     // Runtime: O(n)
     ~PairingPQ() {
         while (!this->empty()) {
-            Node* temp = root;
             this->pop();
-            delete temp;
         }
         // TODO: Implement this function.
     } // ~PairingPQ()
@@ -196,6 +193,12 @@ public:
         if (this->size() == 1) {
             Node* her = root;
             root = nullptr;
+            delete her;
+            count--;
+        } else if (this->size() == 2) {
+            Node* her = root;
+            root = her->child;
+            root->previous = nullptr;
             delete her;
             count--;
         } else {

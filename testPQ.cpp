@@ -264,6 +264,7 @@ void testPairing() {
         // Copy-assignment operator
         PairingPQ<int> pairing3 {};
         pairing3 = pairing2;
+        std::cout << pairing3.size() << std::endl;
 
         // A reference to a PairingPQ<T> is a reference to an Eecs281PQ<T>.
         // Yay for polymorphism! We can therefore write:
@@ -276,6 +277,11 @@ void testPairing() {
         assert(pq1.size() == 3);
         assert(not pq1.empty());
         assert(pq1.top() == 3);
+
+        assert(pq2.size() == 1);
+        assert(not pq2.empty());
+        assert(pq2.top() == 0);
+
         pq2.push(pq3.top());
         assert(pq2.top() == pq3.top());
 
