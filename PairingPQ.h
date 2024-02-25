@@ -215,11 +215,13 @@ public:
             std::deque<Node*> hold;
             Node* a = root;
             Node* b = a->child;
+            b->previous = nullptr;
+            assert(b != nullptr);
             bool help = (b != nullptr);
             bool mom = (a->previous != nullptr);
             bool bro = (a->sibling != nullptr);
+            delete root;
             root = b;
-            delete a;
             count--;
             b = b->sibling;
             while (b != nullptr) {
