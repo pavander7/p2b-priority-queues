@@ -267,7 +267,7 @@ public:
     // Runtime: As discussed in reading material.
     void updateElt(Node* node, const TYPE &new_value) {
         // TODO: Implement this function
-        if (node == root || (this->compare(new_value,root->getElt()))) {
+        if (node == root) {
             node->elt = new_value;
         } else {
             Node* tSib = node->sibling;
@@ -275,7 +275,7 @@ public:
             std::deque<Node*> hold;
             Node* b = node->child;
 
-            bool kid = tPre->child == node;
+            bool kid = (tPre->child == node);
 
             node->sibling = nullptr;
             node->child = nullptr;
@@ -290,14 +290,15 @@ public:
             add_in(node);
 
             while (b != nullptr) {
-                hold.push_back(b);
                 b->previous = nullptr;
+                hold.push_back(b);
                 Node* a = b;
                 b = a->sibling;
                 a->sibling = nullptr;
             } while (!hold.empty()) {
-                add_in(hold.front());
+                Node*a = hold.front();
                 hold.pop_front();
+                add_in(a);
             }
         }
 
@@ -333,8 +334,9 @@ private:
         if (this->root == nullptr) {
             root = her;
         } else if (this->compare(root->getElt(),her->getElt())) {
-            root->previous = her;
-            her->child = root;
+            Node* him = root;
+            him->previous = her;
+            her->child = him;
             root = her;
         } else {
             if (root->child == nullptr) {
