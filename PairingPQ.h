@@ -275,11 +275,15 @@ public:
             std::deque<Node*> hold;
             Node* b = node->child;
 
+            bool kid = tPre->child == node;
+
             node->sibling = nullptr;
             node->child = nullptr;
             node->previous = nullptr;
-            if(tPre != nullptr) tPre->child = tSib;
-            if(tSib != nullptr) tSib->previous = tPre;
+            if(tPre != nullptr) {
+                if(kid) tPre->child = tSib;
+                else tPre->sibling = tSib;
+            } if(tSib != nullptr) tSib->previous = tPre;
             if(b != nullptr) b->previous = nullptr;
 
             node->elt = new_value;

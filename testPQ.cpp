@@ -327,15 +327,6 @@ void testPairing() {
     }
 
     {
-        const std::vector<int> vec {
-            1,
-            0,
-            2,
-            4,
-            3,
-            6,
-            5
-        };
 
         std::cout << "Calling constructors" << std::endl;
 
@@ -368,7 +359,7 @@ void testPairing() {
         mdch.addNode(5);
         assert(mdch.size() == 7);
         assert(mdch.top() == 6);
-
+        
         mdch.updateElt(judgeJudy, 7);
         assert(mdch.size() == 7);
         assert(mdch.top() == 7);
@@ -384,7 +375,7 @@ void testPairing() {
         mdch.addNode(8);
         assert(mdch.size() == 10);
         assert(mdch.top() == 10);
-
+        
         mdch.updateElt(judgeJudy, 12);
         assert(mdch.size() == 10);
         assert(mdch.top() == 12);
@@ -395,8 +386,8 @@ void testPairing() {
 
         mdch.pop();
         assert(mdch.size() == 8);
-        assert(mdch.top() == 10);
-
+        assert(mdch.top() == 9);
+        
         mdch.updateElt(rupaul, 10);
         assert(mdch.size() == 8);
         assert(mdch.top() == 10);
