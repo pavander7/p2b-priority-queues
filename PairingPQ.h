@@ -131,28 +131,8 @@ public:
     // Description: Destructor
     // Runtime: O(n)
     ~PairingPQ() {
-        if (root != nullptr) {
-            //std::deque<Node*> singles;
-            std::deque<Node*> hold;
-            hold.push_back(root);
-            while (!hold.empty()) {
-                std::cout << "hold size: " << hold.size() << std::endl;
-                std::cout << "this size: " << this->size() << std::endl;
-                //std::cout << "singles size: " << singles.size() << std::endl;
-                Node* a = hold.front();
-                hold.pop_front();
-                Node* b = a->child;
-                //singles.push_back(a);
-                while (b != nullptr) {
-                    hold.push_back(b);
-                    b = b->sibling;
-                } delete a;
-                count--;
-            } /*while (!singles.empty()) {
-                Node* temp = singles.front();
-                singles.pop_front();
-                delete temp;
-            } */
+        while (!this->empty()) {
+            this->pop();
         }
         // TODO: Implement this function.
     } // ~PairingPQ()
@@ -286,30 +266,34 @@ public:
     // Runtime: As discussed in reading material.
     void updateElt(Node* node, const TYPE &new_value) {
         // TODO: Implement this function
-        Node* tSib = node->sibling;
-        Node* tPre = node->previous;
-        std::deque<Node*> hold;
-        Node* a = node;
-        Node* b = a->child;
+        if (node == root) {
+            node->elt = new_value;
+        } else {
+            Node* tSib = node->sibling;
+            Node* tPre = node->previous;
+            //std::deque<Node*> hold;
+            //Node* a = node;
+            //Node* b = a->child;
 
-        node->sibling = nullptr;
-        node->child = nullptr;
-        node->previous = nullptr;
+            node->sibling = nullptr;
+            node->child = nullptr;
+            node->previous = nullptr;
 
-        if(tSib != nullptr) tSib->previous = tPre;
+            if(tSib != nullptr) tSib->previous = tPre;
 
-        node->elt = new_value;
-        hold.push_back(node);
+            node->elt = new_value;
+            add_in(node);
 
-        while (b != nullptr) {
-            hold.push_back(b);
-            b->previous = nullptr;
-            a = b;
-            b = a->sibling;
-            a->sibling = nullptr;
-        } while (!hold.empty()) {
-            add_in(hold.front());
-            hold.pop_front();
+            /*while (b != nullptr) {
+                hold.push_back(b);
+                b->previous = nullptr;
+                a = b;
+                b = a->sibling;
+                a->sibling = nullptr;
+            } while (!hold.empty()) {
+                add_in(hold.front());
+                hold.pop_front();
+            }*/
         }
 
         /* (void)node;  // Delete this line when you implement this function

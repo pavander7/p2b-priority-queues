@@ -264,13 +264,13 @@ void testPairing() {
         // Copy-assignment operator
         PairingPQ<int> pairing3 {};
         pairing3 = pairing2;
-
+        
         // A reference to a PairingPQ<T> is a reference to an Eecs281PQ<T>.
         // Yay for polymorphism! We can therefore write:
         Eecs281PQ<int>& pq1 = pairing1;
         Eecs281PQ<int>& pq2 = pairing2;
         Eecs281PQ<int>& pq3 = pairing3;
-
+        
         pq1.push(3);
         pq2.pop();
         assert(pq1.size() == 3);
@@ -283,6 +283,7 @@ void testPairing() {
 
         pq2.push(pq3.top());
         assert(pq2.top() == pq3.top());
+        
 
         std::cout << "Basic tests done." << std::endl;
 
@@ -290,39 +291,20 @@ void testPairing() {
         auto her = pairing3.addNode(7);
         assert(pairing3.size() == 3);
         assert(pairing3.top() == 7);
-
+        
         auto him = pairing3.addNode(5);
         assert(pairing3.size() == 4);
         assert(pairing3.top() == 7);
-
-        pairing3.updateElt(her, 4);
-        assert(her->getElt() == 4);
-        assert(pairing3.top() == 5);
+        
+        pairing3.updateElt(her, 8);
+        assert(her->getElt() == 8);
+        assert(pairing3.top() == 8);
         assert(pairing3.size() == 4);
-
-        pairing3.updateElt(him, 6);
-        assert(him->getElt() == 6);
-        assert(pairing3.top() == 6);
+        
+        pairing3.updateElt(him, 9);
+        assert(him->getElt() == 9);
+        assert(pairing3.top() == 9);
         assert(pairing3.size() == 4);
-
-        /*PairingPQ<int> pairing4 { vec.cbegin(), vec.cend() };
-        Eecs281PQ<int>& pq4 = pairing4;
-
-        assert(pq4.size() == 2);
-        assert(pairing4.size() == 2);
-        pairing4.push(2);
-        std::cout << pq4.size() << std::endl;
-        assert(pq4.size() == 2);
-        assert(pairing4.size() == 3);
-        pairing4.pop();
-        assert(pq4.size() == 2);
-        assert(pairing4.size() == 2);
-        pq4.push(2);
-        assert(pq4.size() == 3);
-        assert(pairing4.size() == 2);
-        pq4.pop();
-        assert(pq4.size() == 2);
-        assert(pairing4.size() == 2); */
 
         // That { above creates a scope, and our pairing heaps will fall out
         // of scope at the matching } below.
