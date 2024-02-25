@@ -195,13 +195,13 @@ public:
             root = nullptr;
             delete her;
             count--;
-        } else if (this->size() == 2) {
+        } /*else if (this->size() == 2) {
             Node* her = root;
             root = root->child;
             delete her;
             root->previous = nullptr;
             count--;
-        } else {
+        }*/ else {
             std::deque<Node*> hold;
             Node* a = root;
             Node* b = a->child;
