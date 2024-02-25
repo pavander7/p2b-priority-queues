@@ -305,6 +305,25 @@ void testPairing() {
         assert(pairing3.top() == 6);
         assert(pairing3.size() == 4);
 
+        /*PairingPQ<int> pairing4 { vec.cbegin(), vec.cend() };
+        Eecs281PQ<int>& pq4 = pairing4;
+
+        assert(pq4.size() == 2);
+        assert(pairing4.size() == 2);
+        pairing4.push(2);
+        std::cout << pq4.size() << std::endl;
+        assert(pq4.size() == 2);
+        assert(pairing4.size() == 3);
+        pairing4.pop();
+        assert(pq4.size() == 2);
+        assert(pairing4.size() == 2);
+        pq4.push(2);
+        assert(pq4.size() == 3);
+        assert(pairing4.size() == 2);
+        pq4.pop();
+        assert(pq4.size() == 2);
+        assert(pairing4.size() == 2); */
+
         // That { above creates a scope, and our pairing heaps will fall out
         // of scope at the matching } below.
         std::cout << "Calling destructors" << std::endl;
@@ -354,7 +373,7 @@ int main() {
     std::cin >> choice;
     const PQType pqType = types.at(choice);
 
-    std::cout << "Testing the " << pqType << " PQ...";
+    std::cout << "Testing the " << pqType << " PQ...\n";
 
     // TODO: Add more cases to test other priority queue types.
     switch (pqType) {

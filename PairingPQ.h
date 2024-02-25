@@ -132,23 +132,28 @@ public:
     // Runtime: O(n)
     ~PairingPQ() {
         if (root != nullptr) {
+            //std::deque<Node*> singles;
             std::deque<Node*> hold;
             hold.push_back(root);
             while (!hold.empty()) {
-                Node* temp = hold.front();
-                Node* b = temp->child;
-                while (b != nullptr) {
-                    Node* c = b->sibling;
-                    b->sibling = nullptr;
-                    if(c != nullptr) c->previous = nullptr;
-                    hold.push_back(b);
-                    b = c;
-                }
+                std::cout << "hold size: " << hold.size() << std::endl;
+                std::cout << "this size: " << this->size() << std::endl;
+                //std::cout << "singles size: " << singles.size() << std::endl;
+                Node* a = hold.front();
                 hold.pop_front();
+                Node* b = a->child;
+                //singles.push_back(a);
+                while (b != nullptr) {
+                    hold.push_back(b);
+                    b = b->sibling;
+                } delete a;
+                count--;
+            } /*while (!singles.empty()) {
+                Node* temp = singles.front();
+                singles.pop_front();
                 delete temp;
-            }
+            } */
         }
-        
         // TODO: Implement this function.
     } // ~PairingPQ()
 
