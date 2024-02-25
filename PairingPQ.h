@@ -266,34 +266,34 @@ public:
     // Runtime: As discussed in reading material.
     void updateElt(Node* node, const TYPE &new_value) {
         // TODO: Implement this function
-        if (node == root) {
+        if (node == root || (this->compare(new_value,root->getElt()))) {
             node->elt = new_value;
         } else {
             Node* tSib = node->sibling;
             Node* tPre = node->previous;
-            //std::deque<Node*> hold;
-            //Node* a = node;
-            //Node* b = a->child;
+            std::deque<Node*> hold;
+            Node* b = node->child;
 
             node->sibling = nullptr;
             node->child = nullptr;
             node->previous = nullptr;
-
+            if(tPre != nullptr) tPre->child = tSib;
             if(tSib != nullptr) tSib->previous = tPre;
+            if(b != nullptr) b->previous = nullptr;
 
             node->elt = new_value;
             add_in(node);
 
-            /*while (b != nullptr) {
+            while (b != nullptr) {
                 hold.push_back(b);
                 b->previous = nullptr;
-                a = b;
+                Node* a = b;
                 b = a->sibling;
                 a->sibling = nullptr;
             } while (!hold.empty()) {
                 add_in(hold.front());
                 hold.pop_front();
-            }*/
+            }
         }
 
         /* (void)node;  // Delete this line when you implement this function

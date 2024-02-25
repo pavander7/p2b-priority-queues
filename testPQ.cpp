@@ -292,7 +292,7 @@ void testPairing() {
         assert(pairing3.size() == 3);
         assert(pairing3.top() == 7);
         
-        /*auto him =*/ pairing3.addNode(5);
+        auto him = pairing3.addNode(5);
         assert(pairing3.size() == 4);
         assert(pairing3.top() == 7);
         
@@ -301,14 +301,122 @@ void testPairing() {
         assert(pairing3.top() == 8);
         assert(pairing3.size() == 4);
         
-        /*pairing3.updateElt(him, 9);
+        pairing3.updateElt(him, 9);
         assert(him->getElt() == 9);
         assert(pairing3.top() == 9);
-        assert(pairing3.size() == 4);*/
+        assert(pairing3.size() == 4);
+
+        auto them = pairing3.addNode(3);
+        pairing3.addNode(4);
+        assert(pairing3.size() == 6);
+        assert(pairing3.top() == 9);
+
+        pairing3.updateElt(them, 10);
+        assert(them->getElt() == 10);
+        assert(pairing3.top() == 10);
+        assert(pairing3.size() == 6);
+
+        pairing3.updateElt(her, 11);
+        assert(her->getElt() == 11);
+        assert(pairing3.top() == 11);
+        assert(pairing3.size() == 6);
 
         // That { above creates a scope, and our pairing heaps will fall out
         // of scope at the matching } below.
         std::cout << "Calling destructors" << std::endl;
+    }
+
+    {
+        const std::vector<int> vec {
+            1,
+            0,
+            2,
+            4,
+            3,
+            6,
+            5
+        };
+
+        std::cout << "Calling constructors" << std::endl;
+
+        PairingPQ<int> mdch {}; //mdch = mojo dojo casa house
+        
+        mdch.addNode(2);
+        assert(mdch.size() == 1);
+        assert(mdch.top() == 2);
+
+        mdch.addNode(1);
+        assert(mdch.size() == 2);
+        assert(mdch.top() == 2);
+
+        mdch.addNode(0);
+        assert(mdch.size() == 3);
+        assert(mdch.top() == 2);
+
+        auto judgeJudy = mdch.addNode(4);
+        assert(mdch.size() == 4);
+        assert(mdch.top() == 4);
+
+        mdch.addNode(3);
+        assert(mdch.size() == 5);
+        assert(mdch.top() == 4);
+        
+        auto rupaul = mdch.addNode(6);
+        assert(mdch.size() == 6);
+        assert(mdch.top() == 6);
+
+        mdch.addNode(5);
+        assert(mdch.size() == 7);
+        assert(mdch.top() == 6);
+
+        mdch.updateElt(judgeJudy, 7);
+        assert(mdch.size() == 7);
+        assert(mdch.top() == 7);
+
+        mdch.addNode(10);
+        assert(mdch.size() == 8);
+        assert(mdch.top() == 10);
+
+        mdch.addNode(9);
+        assert(mdch.size() == 9);
+        assert(mdch.top() == 10);
+
+        mdch.addNode(8);
+        assert(mdch.size() == 10);
+        assert(mdch.top() == 10);
+
+        mdch.updateElt(judgeJudy, 12);
+        assert(mdch.size() == 10);
+        assert(mdch.top() == 12);
+
+        mdch.pop();
+        assert(mdch.size() == 9);
+        assert(mdch.top() == 10);
+
+        mdch.pop();
+        assert(mdch.size() == 8);
+        assert(mdch.top() == 10);
+
+        mdch.updateElt(rupaul, 10);
+        assert(mdch.size() == 8);
+        assert(mdch.top() == 10);
+
+        mdch.pop();
+        assert(mdch.size() == 7);
+        assert(mdch.top() == 9);
+
+        mdch.pop();
+        assert(mdch.size() == 6);
+        assert(mdch.top() == 8);
+
+        mdch.pop();
+        assert(mdch.size() == 5);
+        assert(mdch.top() == 5);
+
+        mdch.pop();
+        assert(mdch.size() == 4);
+        assert(mdch.top() == 3);
+
     }
 
     std::cout << "testPairing succeeded!" << std::endl;
