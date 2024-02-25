@@ -218,17 +218,17 @@ public:
             bool help = (b != nullptr);
             bool mom = (a->previous != nullptr);
             bool bro = (a->sibling != nullptr);
-            root = nullptr;
+            root = b;
             delete a;
             count--;
+            b = b->sibling;
             while (b != nullptr) {
                 hold.push_back(b);
                 b->previous = nullptr;
                 a = b;
                 b = a->sibling;
                 a->sibling = nullptr;
-            } root = hold.front(); 
-            hold.pop_front();
+            } 
             while (!hold.empty()) {
                 Node* temp = hold.front();
                 add_in(temp);
