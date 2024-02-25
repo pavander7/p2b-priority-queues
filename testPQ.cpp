@@ -288,40 +288,40 @@ void testPairing() {
         std::cout << "Basic tests done." << std::endl;
 
         // TODO: Add more code to test addNode, updateElt, etc.
-        auto her = pairing3.addNode(7);
+        auto node1 = pairing3.addNode(7);
         assert(pairing3.size() == 3);
         assert(pairing3.top() == 7);
         
-        auto him = pairing3.addNode(5);
+        auto node2 = pairing3.addNode(5);
         assert(pairing3.size() == 4);
         assert(pairing3.top() == 7);
         
-        pairing3.updateElt(her, 8);
-        assert(her->getElt() == 8);
+        pairing3.updateElt(node1, 8);
+        assert(node1->getElt() == 8);
         assert(pairing3.top() == 8);
         assert(pairing3.size() == 4);
         
-        pairing3.updateElt(him, 9);
-        assert(him->getElt() == 9);
+        pairing3.updateElt(node2, 9);
+        assert(node2->getElt() == 9);
         assert(pairing3.top() == 9);
         assert(pairing3.size() == 4);
 
-        //auto them = 
+        //auto node3 = 
         pairing3.addNode(3);
-        pairing3.addNode(4);
+        //pairing3.addNode(4);
         //assert(pairing3.size() == 6);
-        assert(pairing3.top() == 9);
-        /*
-        pairing3.updateElt(them, 10);
-        assert(them->getElt() == 10);
+        //assert(pairing3.top() == 9);
+        
+        /*pairing3.updateElt(node3, 10);
+        assert(node3->getElt() == 10);
         assert(pairing3.top() == 10);
         assert(pairing3.size() == 6);
 
-        pairing3.updateElt(her, 11);
-        assert(her->getElt() == 11);
+        pairing3.updateElt(node1, 11);
+        assert(node1->getElt() == 11);
         assert(pairing3.top() == 11);
-        assert(pairing3.size() == 6);
-        */
+        assert(pairing3.size() == 6);*/
+        
         // That { above creates a scope, and our pairing heaps will fall out
         // of scope at the matching } below.
         std::cout << "Calling destructors" << std::endl;

@@ -191,20 +191,26 @@ public:
     virtual void pop() {
         // TODO: Implement this function.
         if (this->size() == 1) {
+            assert(root != nullptr);
             Node* her = root;
             root = nullptr;
             delete her;
             count--;
-        } /*else if (this->size() == 2) {
+        } else if (this->size() == 2) {
+            assert(root != nullptr);
             Node* her = root;
             root = root->child;
             delete her;
             root->previous = nullptr;
             count--;
-        }*/ else {
+        } else {
+            assert(root != nullptr);
             std::deque<Node*> hold;
             Node* a = root;
             Node* b = a->child;
+            bool help = (b != nullptr);
+            bool mom = (a->previous != nullptr);
+            bool bro = (a->sibling != nullptr);
             root = nullptr;
             delete a;
             count--;
@@ -214,10 +220,23 @@ public:
                 a = b;
                 b = a->sibling;
                 a->sibling = nullptr;
-            } while (!hold.empty()) {
+            } root = hold.front(); 
+            hold.pop_front();
+            while (!hold.empty()) {
                 Node* temp = hold.front();
                 add_in(temp);
                 hold.pop_front();
+            }
+            if (root == nullptr) {
+                std::cout << "size when fail: " << this->size() << std::endl;
+                //std::cout << "held: " << mem << std::endl;
+                if (help) std::cout << "root->child existed before pop." << std::endl;
+                else std::cout << "root->child didn't exist before pop." << std::endl;
+                if (mom) std::cout << "root->previous existed before pop." << std::endl;
+                else std::cout << "root->previous didn't exist before pop." << std::endl;
+                if (bro) std::cout << "root->sibling existed before pop." << std::endl;
+                else std::cout << "root->sibling didn't exist before pop." << std::endl;
+                assert(root != nullptr);
             }
         }
         // sever family ties, store children in hold, addNode the children back
@@ -316,8 +335,9 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function
         Node* her = new Node(val);
-        add_in(her);
+        Node* him = add_in(her);
         count++;
+        assert (her == him);
         return her;
         /* (void)val;  // Delete this line when you implement this function
         return nullptr; // TODO: Delete or change this line */
@@ -329,26 +349,34 @@ private:
     // require here.
     // TODO: We recommend creating a 'meld' function (see the Pairing Heap
     // papers).
-    void add_in (Node* her) {
+    Node* add_in (Node* her) {
         if (this->root == nullptr) {
             root = her;
+            assert(root != nullptr);
         } else if (this->compare(root->getElt(),her->getElt())) {
+            assert(root != nullptr);
             Node* him = root;
             him->previous = her;
             her->child = him;
             root = her;
+            assert(root != nullptr);
         } else {
             if (root->child == nullptr) {
+                assert(root != nullptr);
                 root->child = her;
                 her->previous = root;
+                assert(root != nullptr);
             } else {
+                assert(root != nullptr);
                 Node* him = root->child;
                 root->child = her;
                 her->previous = root;
                 her->sibling = him;
                 him->previous = her;
+                assert(root != nullptr);
             }
-        }
+        } 
+        return her;
     }
 
     Node* root;
