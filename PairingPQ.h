@@ -197,10 +197,9 @@ public:
             count--;
         } else if (this->size() == 2) {
             Node* her = root;
-            Node* him = root->child;
-            him->previous = nullptr;
+            root = root->child;
             delete her;
-            root = him;
+            root->previous = nullptr;
             count--;
         } else {
             std::deque<Node*> hold;
