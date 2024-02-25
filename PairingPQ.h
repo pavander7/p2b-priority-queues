@@ -66,10 +66,12 @@ public:
     PairingPQ(InputIterator start, InputIterator end, COMP_FUNCTOR comp = COMP_FUNCTOR()) :
         BaseClass{ comp } {
         // TODO: Implement this function.
-        this->count = 0;
-        this->root = nullptr;
         this->compare = comp;
         InputIterator here = start;
+        Node* temp = new Node(*here);
+        this->root = temp;
+        here++;
+        this->count = 1;
         while (here != end) {
             push(*here);
             here++;

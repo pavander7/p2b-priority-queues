@@ -270,7 +270,8 @@ void testPairing() {
         Eecs281PQ<int>& pq1 = pairing1;
         Eecs281PQ<int>& pq2 = pairing2;
         Eecs281PQ<int>& pq3 = pairing3;
-        
+
+        assert(pq1.size() == 2);
         pq1.push(3);
         pq2.pop();
         assert(pq1.size() == 3);
