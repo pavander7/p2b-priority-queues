@@ -91,25 +91,30 @@ public:
         // TODO: Implement this function.
         // NOTE: The structure does not have to be identical to the original,
         //       but it must still be a valid pairing heap.
-        root = nullptr;
         count = 0;
         this->compare = other.compare;
         std::deque<Node*> singles;
         std::deque<Node*> hold;
-        hold.push_back(other.root);
-        while (!hold.empty()) {
-            Node* a = hold.front();
-            Node* b = a->child;
-            hold.pop_front();
-            singles.push_back(a);
-            while (b != nullptr) {
-                hold.push_back(b);
-                b = b->sibling;
+        Node* new_root = new Node(other.root->getElt());
+        root = new_root;
+        count++;
+        if (other.root->child != nullptr) {
+            hold.push_back(other.root->child);
+            while (!hold.empty()) {
+                Node* a = hold.front();
+                Node* b = a->child;
+                hold.pop_front();
+                singles.push_back(a);
+                while (b != nullptr) {
+                    hold.push_back(b);
+                    b = b->sibling;
+                }
+            } 
+            while (!singles.empty()) {
+                Node* temp = singles.front();
+                this->push(temp->getElt());
+                singles.pop_front();
             }
-        } while (!singles.empty()) {
-            Node* temp = singles.front();
-            this->push(temp->getElt());
-            singles.pop_front();
         }
     } // PairingPQ()
 
