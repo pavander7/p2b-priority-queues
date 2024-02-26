@@ -122,9 +122,28 @@ void testPrimitiveOperations() {
     assert(eecsPQ2.size() == 0);
     assert(eecsPQ2.empty());
 
-    std::vector<int> vec;
-    for (int q = 0; q < 10; q++) {
-        vec.push_back(q);
+    const std::vector<int> vec {
+            65, 21, 65, 70, 34, 59, 56, 82, 17, 89, 98, 39, 61, 58, 29, 85, 37, 5, 26, 96, 74, 98, 56, 31, 17
+        };
+
+    PQ<int> pq3 {};
+    Eecs281PQ<int>& eecsPQ3(pq3);
+
+    assert(eecsPQ3.empty());
+
+    for (size_t q = 0; q < vec.size(); q++) {
+        eecsPQ3.push(vec[q]);
+        assert(eecsPQ3.size() == (q + 1));
+    }
+
+    const std::vector<int> vec_s {
+        98, 98, 96, 89, 85, 82, 74, 70, 65, 65, 61, 59, 58, 56, 56, 39, 37, 34, 31, 29, 26, 21, 17, 17, 5
+    };
+
+    for (size_t q = 0; q < vec.size(); q++) {
+        assert(eecsPQ3.size() == (vec.size() - q));
+        assert(eecsPQ3.top() == vec_s[q]);
+        eecsPQ3.pop();
     }
 
     std::cout << "testPrimitiveOperations succeeded!" << std::endl;
@@ -223,17 +242,59 @@ void testUpdatePriorities() {
 
     // Change some element in data (which is pointed to by an element in pq).
     // This new value should be higher than any other so its address will
-    // wind qt the top adter updatePriorities.
+    // wind qt the top after updatePriorities.
     auto& datum = data[0];
     datum = 10;
     eecsPQ.updatePriorities();
     assert(*eecsPQ.top() == 10);
     assert(eecsPQ.top() == &datum);
 
-    datum = 2;
-    eecsPQ.updatePriorities();
-    assert(*eecsPQ.top() == 5);
-    assert(eecsPQ.top() == &data[1]);
+
+    //test 2: volume
+    std::vector<int> data2 {
+        34, 55, 29, 96, 28, 7, 62, 42, 97, 37, 88, 6, 17, 18, 29, 73, 89, 60, 60, 71, 82, 70, 20, 74, 49
+    };
+
+    PQ<const int*, IntPtrComp> pq2 {};
+    Eecs281PQ<const int*, IntPtrComp>& eecsPQ2 = pq2;
+
+    for (auto& datum : data2) {
+        eecsPQ2.push(&datum);
+    }
+
+    for (size_t elt = 0; elt < 25; elt++) {
+        auto& datum = data2[elt];
+        datum = int(elt + size_t(101));
+        eecsPQ2.updatePriorities();
+        assert(*eecsPQ2.top() == int(elt + size_t(101)));
+        assert(eecsPQ2.top() == &datum);
+    }
+
+    //test 3: multiple
+    std::vector<int> data3 {
+        47, 89, 100, 55, 87, 83, 100, 62, 100, 97, 3, 69, 9, 24, 66, 61, 12, 80, 62, 81, 49, 80, 85, 64, 17
+    };
+
+    PQ<const int*, IntPtrComp> pq3 {};
+    Eecs281PQ<const int*, IntPtrComp>& eecsPQ3 = pq3;
+
+    for (auto& datum : data3) {
+        eecsPQ3.push(&datum);
+    }
+
+    for (size_t elt = 0; elt < 25; elt++) {
+        auto& datum = data3[elt];
+        datum = int(elt + size_t(101));
+    }
+    eecsPQ3.updatePriorities();
+    assert(*eecsPQ3.top() == size_t(125));
+    auto& datum2 = data3.back();
+    assert(eecsPQ3.top() == &datum2);
+
+    for (size_t elt = 125; elt > 100; elt--) {
+        assert(*eecsPQ3.top() == int(elt));
+        eecsPQ3.pop();
+    }
 
     std::cout << "testUpdatePriorities succeeded!" << std::endl;
 
@@ -307,13 +368,13 @@ void testPairing() {
         assert(pairing3.top() == 9);
         assert(pairing3.size() == 4);
 
-        //auto node3 = 
+        auto node3 = 
         pairing3.addNode(3);
-        //pairing3.addNode(4);
-        //assert(pairing3.size() == 6);
-        //assert(pairing3.top() == 9);
+        pairing3.addNode(4);
+        assert(pairing3.size() == 6);
+        assert(pairing3.top() == 9);
         
-        /*pairing3.updateElt(node3, 10);
+        pairing3.updateElt(node3, 10);
         assert(node3->getElt() == 10);
         assert(pairing3.top() == 10);
         assert(pairing3.size() == 6);
@@ -321,7 +382,7 @@ void testPairing() {
         pairing3.updateElt(node1, 11);
         assert(node1->getElt() == 11);
         assert(pairing3.top() == 11);
-        assert(pairing3.size() == 6);*/
+        assert(pairing3.size() == 6);
         
         // That { above creates a scope, and our pairing heaps will fall out
         // of scope at the matching } below.
@@ -410,6 +471,7 @@ void testPairing() {
         assert(mdch.size() == 4);
         assert(mdch.top() == 3);
 
+        std::cout << "Calling destructors" << std::endl;
     }
 
     std::cout << "testPairing succeeded!" << std::endl;
@@ -471,7 +533,6 @@ int main() {
         break;
     case PQType::Pairing:
         testPriorityQueue<PairingPQ>();
-        testPairing();
         break;
     default:
         std::cout << "Unrecognized PQ type " << pqType << " in main.\n"

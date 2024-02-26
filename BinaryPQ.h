@@ -46,6 +46,18 @@ public:
     virtual ~BinaryPQ() {
     } // ~BinaryPQ()
 
+    // Translate 1-based indexing into a 0-based vector
+    TYPE &getElement(std::size_t i) {
+      assert (i != 0);
+      assert (i <= size());
+      return data[i - 1];
+    }  // getElement()
+
+    const TYPE &getElement(std::size_t i) const {
+      assert (i != 0);
+      assert (i <= size());
+      return data[i - 1];
+    }  // getElement()
 
     // Description: Assumes that all elements inside the heap are out of order and
     //              'rebuilds' the heap by fixing the heap invariant.
@@ -53,17 +65,20 @@ public:
     virtual void updatePriorities() {
         // TODO: Implement this function.
         //std::cout << "updating priorities on array of size " << data.size() << "...\n";
-        for (size_t w = data.size() - size_t(1); w > 0; w--) {
-            //std::cout << w << std::endl;
-            if (this->compare(data[parent(w)],data[w])) {
-                //std::cout << "swapping: " << parent(w) << " & " << w << std::endl;
-                TYPE temp = data[w];
-                data[w] = data[parent(w)];
-                data[parent(w)] = temp;
-            } //else std::cout << "no swap made on " << w << " & " << child_l(w) << "\n";
-        }
-        //std::cout << "priorities updated.\n";
-
+        std::vector<TYPE> hold;
+        while (!data.empty()) {
+            hold.push_back(data.back());
+            data.pop_back();
+            size_t w = hold.size(); 
+            while (w > 1) {
+                if (this->compare(hold[parent(w) - size_t(1)],hold[w - size_t(1)])) {
+                    TYPE temp = hold[parent(w) - size_t(1)];
+                    hold[parent(w) - size_t(1)] = hold[w - size_t(1)];
+                    hold[w - size_t(1)] = temp;
+                    w = parent(w);
+                } else break;
+            }
+        } data = hold;
     } // updatePriorities()
 
 
@@ -73,12 +88,14 @@ public:
         // TODO: Implement this function.
         // this->test_indices();
         data.push_back(val);
-        size_t w = data.size() - size_t(1);
-        while (this->compare(data[parent(w)],data[w]) && w > 0) {
-            TYPE temp = data[parent(w)];
-            data[parent(w)] = data[w];
-            data[w] = temp;
-            w = parent(w);
+        size_t w = data.size();
+        while (w > 1) {
+            if (this->compare(getElement(parent(w)),getElement(w))) {
+                TYPE temp = getElement(parent(w));
+                getElement(parent(w)) = getElement(w);
+                getElement(w) = temp;
+                w = parent(w);
+            } else break;
         }
         //(void)val;  // Delete this line when you implement this function
     } // push()
@@ -95,12 +112,29 @@ public:
         data.back() = data.front();
         data.front() = temp;
         data.pop_back();
-        for (size_t w = 0; w < data.size(); w = child_less(w)) {
-            if(this->compare(data[child_less(w)],data[w])) {
-                TYPE temp = data[w];
-                data[w] = data[child_less(w)];
-                data[child_less(w)] = temp;
-            } else break;
+        if (size() == 2) {
+            if (this->compare(data[0],data[1])) {
+                TYPE temp = data[0];
+                data[0] = data[1];
+                data[1] = temp;
+            }
+        } else {
+            size_t w = 1;
+            while (w < data.size() && child_l(w) < data.size()) {
+                if(!(this->compare(getElement(child_less(w)),getElement(w)))) {
+                    size_t z = child_less(w);
+                    TYPE temp2 = getElement(w);
+                    getElement(w) = getElement(child_less(w));
+                    getElement(child_less(w)) = temp2;
+                    w = z;
+                } else if(!(this->compare(getElement(child_more(w)),getElement(w)))) {
+                    size_t z = child_more(w);
+                    TYPE temp2 = getElement(w);
+                    getElement(w) = getElement(child_more(w));
+                    getElement(child_more(w)) = temp2;
+                    w = z;
+                } else break;
+            }
         }
         // TODO: Implement this function.
     } // pop()
@@ -147,7 +181,8 @@ private:
     // TODO: Add any additional member functions you require here.
     //       For instance, you might add fixUp() and fixDown().
     size_t child_l(const size_t n) const {
-        return (size_t(2)*n+size_t(1));
+        //std::cout << "parent: " << n << ", child_l: " << (size_t(2)*n) << std::endl;
+        return (size_t(2)*n);
     }
     size_t child_r(const size_t n) const {
         return (child_l(n) + size_t(1));
@@ -155,13 +190,20 @@ private:
     size_t child_less(const size_t n) const {
         if (child_l(n) == size()) {
             return child_l(n);
-        } else if (!(this->compare(data[child_l(n)], data[child_r(n)]))) {
+        } else if (!(this->compare(getElement(child_l(n)),getElement(child_r(n))))) {
             return child_l(n);
         } else return child_r(n);
     } 
+    size_t child_more(const size_t n) const {
+        if (child_l(n) == size()) {
+            return child_l(n);
+        } else if (!(this->compare(getElement(child_r(n)),getElement(child_l(n))))) {
+            return child_r(n);
+        } else return child_l(n);
+    } 
     size_t parent(const size_t n) const {
         if (n == 0) return 0;
-        else return ((n - size_t(1))/size_t(2));
+        else return ((n)/size_t(2));
     }
 }; // BinaryPQ
 

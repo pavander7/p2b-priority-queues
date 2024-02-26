@@ -26,7 +26,6 @@ public:
         this->compare = comp;
     } // SortedPQ
 
-
     // Description: Construct a PQ out of an iterator range with an optional
     //              comparison functor.
     // Runtime: O(n log n) where n is number of elements in range.
@@ -35,9 +34,10 @@ public:
         BaseClass{ comp } {
         // TODO: Implement this function
         this->compare = comp;
-        for (InputIterator w = start; w != end; w++) {
-            data.push_back(*w);
-        } 
+        for (InputIterator here = start; here != end; here++) {
+            data.push_back();
+        }
+        sort(data.begin(), data.end(), this->compare);
         //(void)start;  // Delete this line when you implement this function
         //(void)end;  // Delete this line when you implement this function
     } // SortedPQ

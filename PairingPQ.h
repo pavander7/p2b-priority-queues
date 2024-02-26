@@ -6,8 +6,6 @@
 #include "Eecs281PQ.h"
 #include <deque>
 #include <utility>
-#include <cassert>
-#include <iostream>
 
 // A specialized version of the priority queue ADT implemented as a pairing
 // heap.
@@ -198,39 +196,33 @@ public:
     virtual void pop() {
         // TODO: Implement this function.
         if (this->size() == 1) {
-            assert(root != nullptr);
             Node* her = root;
             root = nullptr;
             delete her;
             count--;
         } else if (this->size() == 2) {
-            assert(this->root != nullptr);
-            assert(root->child != nullptr);
             Node* her = root;
             root = root->child;
             root->previous = nullptr;
             delete her;
             count--;
         } else {
-            assert(root != nullptr);
             std::deque<Node*> hold;
             Node* a = root;
             Node* b = a->child;
             b->previous = nullptr;
-            assert(b != nullptr);
-            //root = b;
+            root = b;
             delete a;
             count--;
-            //b = b->sibling;
-            Node* c = b->sibling;
+            b = b->sibling;
+            if (this->size() != 2) root->sibling = nullptr;
             while (b != nullptr) {
                 hold.push_back(b);
                 b->previous = nullptr;
-                c = b;
+                Node* c = b;
                 b = c->sibling;
                 c->sibling = nullptr;
-            } root = hold.front();
-            hold.pop_front();
+            } 
             while (!hold.empty()) {
                 Node* temp = hold.front();
                 add_in(temp);
@@ -249,7 +241,6 @@ public:
     // Runtime: O(1)
     virtual const TYPE &top() const {
         // TODO: Implement this function
-        assert(this->root != nullptr);
         return (root->getElt());
         // These lines are present only so that this provided file compiles.
         /* static TYPE temp; // TODO: Delete this line
@@ -312,7 +303,7 @@ public:
                 b = a->sibling;
                 a->sibling = nullptr;
             } while (!hold.empty()) {
-                Node*a = hold.front();
+                Node* a = hold.front();
                 hold.pop_front();
                 add_in(a);
             }
@@ -333,9 +324,8 @@ public:
     Node* addNode(const TYPE &val) {
         // TODO: Implement this function
         Node* her = new Node(val);
-        Node* him = add_in(her);
+        add_in(her);
         count++;
-        assert (her == him);
         return her;
         /* (void)val;  // Delete this line when you implement this function
         return nullptr; // TODO: Delete or change this line */
@@ -347,34 +337,28 @@ private:
     // require here.
     // TODO: We recommend creating a 'meld' function (see the Pairing Heap
     // papers).
-    Node* add_in (Node* her) {
+    void add_in (Node* her) {
         if (this->root == nullptr) {
             root = her;
-            assert(root != nullptr);
         } else if (this->compare(root->getElt(),her->getElt())) {
-            assert(root != nullptr);
             Node* him = root;
+            Node* rupaul = her->child;
             him->previous = her;
             her->child = him;
+            him->sibling = rupaul;
             root = her;
-            assert(root != nullptr);
         } else {
             if (root->child == nullptr) {
-                assert(root != nullptr);
                 root->child = her;
                 her->previous = root;
-                assert(root != nullptr);
             } else {
-                assert(root != nullptr);
                 Node* him = root->child;
                 root->child = her;
                 her->previous = root;
                 her->sibling = him;
                 him->previous = her;
-                assert(root != nullptr);
             }
         } 
-        return her;
     }
 
     Node* root;
